@@ -1,34 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '@ant-design/v5-patch-for-react-19';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Button, Input, Space, Checkbox, message } from 'antd';
 import './base.css';
 import './App.css';
+import './responsive.css';
 import TrangChu from './TrangChu';
-
 import image from './assets/andraes-arteaga-7FweK4uGEX4-unsplash.jpg';
-
-const onChange = (e) => {
-  console.log(`checked = ${e.target.checked}`);
-};
 
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+
+  // Tự động điền username & password nếu đã lưu
+  useEffect(() => {
+    const savedUsername = localStorage.getItem('rememberUsername');
+    const savedPassword = localStorage.getItem('rememberPassword');
+
+    if (savedUsername && savedPassword) {
+      setUsername(savedUsername);
+      setPassword(savedPassword);
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleLogin = async () => {
     if (!username || !password) {
       message.error('Vui lòng nhập tên đăng nhập và mật khẩu');
       return;
     }
-  
+
     const payload = {
       UserName: username,
       Password: password,
     };
-  
+
     try {
       const response = await fetch('https://quanlykhachsan-ozv3.onrender.com/api/Login/login', {
         method: 'POST',
@@ -37,19 +46,32 @@ function App() {
         },
         body: JSON.stringify(payload),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok && data.token) {
         message.success('Đăng nhập thành công');
-        localStorage.setItem('token', data.token); // Lưu token vào localStorage
-        navigate('/TrangChu'); // Chuyển hướng tới trang chủ sau khi đăng nhập thành công
+        localStorage.setItem('token', data.token);
+
+        if (rememberMe) {
+          localStorage.setItem('rememberUsername', username);
+          localStorage.setItem('rememberPassword', password);
+        } else {
+          localStorage.removeItem('rememberUsername');
+          localStorage.removeItem('rememberPassword');
+        }
+
+        navigate('/TrangChu');
       } else {
         message.error(data.message || 'Đăng nhập thất bại');
       }
     } catch (error) {
       message.error('Đã có lỗi xảy ra. Vui lòng thử lại');
     }
+  };
+
+  const onChange = (e) => {
+    setRememberMe(e.target.checked);
   };
 
   return (
@@ -67,7 +89,7 @@ function App() {
                   className="input-username" 
                   placeholder="VD: user123" 
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)} // Cập nhật giá trị username
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
 
@@ -79,7 +101,7 @@ function App() {
                     placeholder="********"
                     iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)} // Cập nhật giá trị password
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </Space>
               </div>
@@ -88,13 +110,13 @@ function App() {
                 type="primary" 
                 className="btn mt-20" 
                 id="btn-login" 
-                onClick={handleLogin} // Gọi API khi người dùng nhấn "Đăng nhập"
+                onClick={handleLogin}
               >
                 Đăng nhập
               </Button>
 
               <div className="auth-link">
-                <Checkbox onChange={onChange}>Nhớ mật khẩu</Checkbox>
+                <Checkbox checked={rememberMe} onChange={onChange}>Nhớ mật khẩu</Checkbox>
                 <a href="#" className="forget-pass">Quên mật khẩu?</a>
               </div>
 
@@ -105,7 +127,7 @@ function App() {
           </div>
 
           <section className="section">
-            <img src={image} alt="" />
+            <img src={image} alt="hotel" />
           </section>
         </div>
       </div>
