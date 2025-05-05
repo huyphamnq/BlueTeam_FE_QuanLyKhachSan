@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import App from './App'; // Trang đăng nhập
-import TrangChu from './trangchu'; // Trang chủ sau khi đăng nhập thành công
+import TrangChu from './TrangChu'; // Trang chủ sau khi đăng nhập thành công
 import PrivateRoute from './PrivateRoute'; // Import PrivateRoute
 
 function AppRoutes() {
