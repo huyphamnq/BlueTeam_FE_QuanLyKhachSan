@@ -1,0 +1,41 @@
+.main-layout {
+  min-height: 100vh;
+  display: flex;
+}
+
+.sider {
+  position: relative;
+  padding: 20px;
+  background-color: #000;
+}
+
+.logo {
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 60px;
+  margin-bottom: 100px;
+}
+
+.logout-btn {
+  position: absolute;
+  bottom: 40px;
+  left: 20px;
+  right: 20px;
+}
+
+.logout-btn button {
+  padding: 20px 10px;
+}
+
+.main-layout {
+  flex: 1;
+  background-color: #f9f9f9;
+  padding: 100px 30px;
+  font-size: 40px;
+}
+
+.ant-menu {
+  background-color: #000;
+}

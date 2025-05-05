@@ -1,0 +1,116 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '@ant-design/v5-patch-for-react-19';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { Button, Input, Space, Checkbox, message } from 'antd';
+import './base.css';
+import './App.css';
+import TrangChu from './trangchu';
+
+import image from './assets/andraes-arteaga-7FweK4uGEX4-unsplash.jpg';
+
+const onChange = (e) => {
+  console.log(`checked = ${e.target.checked}`);
+};
+
+function App() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    if (!username || !password) {
+      message.error('Vui lòng nhập tên đăng nhập và mật khẩu');
+      return;
+    }
+  
+    const payload = {
+      UserName: username,
+      Password: password,
+    };
+  
+    try {
+      const response = await fetch('https://quanlykhachsan-ozv3.onrender.com/api/Login/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok && data.token) {
+        message.success('Đăng nhập thành công');
+        localStorage.setItem('token', data.token); // Lưu token vào localStorage
+        navigate('/trangchu'); // Chuyển hướng tới trang chủ sau khi đăng nhập thành công
+      } else {
+        message.error(data.message || 'Đăng nhập thất bại');
+      }
+    } catch (error) {
+      message.error('Đã có lỗi xảy ra. Vui lòng thử lại');
+    }
+  };
+
+  return (
+    <>
+      <div className="container">
+        <div className="content">
+          <div className="auth-container">
+            <div className="form-login">
+              <h1>Đăng nhập</h1>
+              <h2>Chào mừng bạn đến với Hotel Management. Website quản lý khách sạn dễ dàng, hiệu quả và thông minh.</h2>
+
+              <div className="mt-20">
+                <h3 className="input-username-title">Tên đăng nhập</h3>
+                <Input 
+                  className="input-username" 
+                  placeholder="VD: user123" 
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)} // Cập nhật giá trị username
+                />
+              </div>
+
+              <div className="mt-20">
+                <h3 className="input-pass-title">Mật khẩu</h3>
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  <Input.Password 
+                    className="input-pass"
+                    placeholder="********"
+                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)} // Cập nhật giá trị password
+                  />
+                </Space>
+              </div>
+
+              <Button 
+                type="primary" 
+                className="btn mt-20" 
+                id="btn-login" 
+                onClick={handleLogin} // Gọi API khi người dùng nhấn "Đăng nhập"
+              >
+                Đăng nhập
+              </Button>
+
+              <div className="auth-link">
+                <Checkbox onChange={onChange}>Nhớ mật khẩu</Checkbox>
+                <a href="#" className="forget-pass">Quên mật khẩu?</a>
+              </div>
+
+              <div className="signup-link">
+                <p>Bạn chưa có tài khoản? <a>Đăng ký ngay</a></p>
+              </div>
+            </div>
+          </div>
+
+          <section className="section">
+            <img src={image} alt="" />
+          </section>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default App;
