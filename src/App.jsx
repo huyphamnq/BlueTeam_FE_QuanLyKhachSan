@@ -5,7 +5,7 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Button, Input, Space, Checkbox, message } from 'antd';
 import './base.css';
 import './App.css';
-import TrangChu from './trangchu';
+import TrangChu from './TrangChu';
 
 import image from './assets/andraes-arteaga-7FweK4uGEX4-unsplash.jpg';
 
@@ -43,7 +43,7 @@ function App() {
       if (response.ok && data.token) {
         message.success('Đăng nhập thành công');
         localStorage.setItem('token', data.token); // Lưu token vào localStorage
-        navigate('/trangchu'); // Chuyển hướng tới trang chủ sau khi đăng nhập thành công
+        navigate('/TrangChu'); // Chuyển hướng tới trang chủ sau khi đăng nhập thành công
       } else {
         message.error(data.message || 'Đăng nhập thất bại');
       }
