@@ -13,7 +13,7 @@ import { Layout, Menu, theme } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { FaHome, FaUser, FaUsers, FaCloud, FaFileInvoice, FaHotel } from "react-icons/fa";
 import { IoLogOutSharp } from "react-icons/io5";
-import './Trangchu.css'
+import './TrangChu.css'
 
 const { Header, Content, Footer, Sider } = Layout;
 
