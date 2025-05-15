@@ -1,94 +1,103 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Layout, Menu, Button } from 'antd';
+import React from 'react';
 import {
-  UserOutlined,
-  TeamOutlined,
-  HomeOutlined,
   AppstoreOutlined,
-  FileTextOutlined,
-  LogoutOutlined
+  BarChartOutlined,
+  CloudOutlined,
+  ShopOutlined,
+  TeamOutlined,
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
 } from '@ant-design/icons';
-import './TrangChu.css';
+import { Layout, Menu, theme } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { FaHome, FaUser, FaUsers, FaCloud, FaFileInvoice, FaHotel } from "react-icons/fa";
+import { IoLogOutSharp } from "react-icons/io5";
+import './Trangchu.css'
 
-const { Sider, Content } = Layout;
+const { Header, Content, Footer, Sider } = Layout;
 
-function TrangChu() {
+const siderStyle = {
+  overflow: 'auto',
+  height: '100vh',
+  position: 'sticky',
+  insetInlineStart: 0,
+  top: 0,
+  bottom: 0,
+  scrollbarWidth: 'thin',
+  scrollbarGutter: 'stable',
+  backgroundColor: '#fff',
+};
+
+const menuItems = [
+  { icon: FaHome, label: 'Trang chủ' },
+  { icon: FaHotel, label: 'Phòng' },
+  { icon: FaUser, label: 'Khách hàng' },
+  { icon: FaUsers, label: 'Nhân Viên' },
+  { icon: FaCloud , label: 'Dịch vụ' },
+  { icon: FaFileInvoice , label: 'Hoá đơn' },
+  { icon: IoLogOutSharp , label: 'Đăng xuất' },
+];
+
+const items = menuItems.map((item, index) => ({
+  key: String(index + 1),
+  icon: React.createElement(item.icon),
+  label: item.label,
+}));
+
+const App = () => {
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+
   const navigate = useNavigate();
-  const [selectedKey, setSelectedKey] = useState('1');
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) navigate('/');
-  }, [navigate]);
-
-  const renderContent = () => {
-    switch (selectedKey) {
-      case '1':
-        return <h2>Quản lý khách hàng</h2>;
-      case '2':
-        return <h2>Quản lý nhân viên</h2>;
-      case '3':
-        return <h2>Quản lý phòng</h2>;
-      case '4':
-        return <h2>Dịch vụ</h2>;
-      case '5':
-        return <h2>Hóa đơn</h2>;
-      default:
-        return <h2>Chào mừng bạn đến với Website Quản lý khách sạn!</h2>;
-    }
-  };
+  const handleMenuClick = ({ key }) => {
+  if (key === '7') {
+    localStorage.removeItem('token');
+    navigate('/');
+  }
+};
 
   return (
-    <Layout className="layout">
-      <Sider width={280} className="sider">
-        <div className="logo">//LOGO//</div>
+    <Layout hasSider>
+      <Sider style={siderStyle}>
+        <div className="demo-logo-vertical" />
         <Menu
-          theme="dark"
+          theme="light"
           mode="inline"
-          selectedKeys={[selectedKey]}
-          onClick={(e) => setSelectedKey(e.key)}
-        >
-          <Menu.Item key="1" icon={<UserOutlined />}>
-            Khách hàng
-          </Menu.Item>
-          <Menu.Item key="2" icon={<TeamOutlined />}>
-            Nhân viên
-          </Menu.Item>
-          <Menu.Item key="3" icon={<HomeOutlined />}>
-            Phòng
-          </Menu.Item>
-          <Menu.Item key="4" icon={<AppstoreOutlined />}>
-            Dịch vụ
-          </Menu.Item>
-          <Menu.Item key="5" icon={<FileTextOutlined />}>
-            Hóa đơn
-          </Menu.Item>
-        </Menu>
-
-        <div className="logout-btn">
-          <Button
-            type="primary"
-            icon={<LogoutOutlined />}
-            danger
-            block
-            onClick={() => {
-              localStorage.removeItem('token');
-              navigate('/');
+          defaultSelectedKeys={['1']}
+          items={items}
+          onClick={handleMenuClick}
+        />
+      </Sider>
+      <Layout style={{backgroundColor: '#fff'}}>
+        <Content style={{ padding: '24px 16px 0', overflow: 'initial' }}>
+          <div
+            style={{
+              padding: 24,
+              textAlign: 'center',
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
             }}
           >
-            Đăng xuất
-          </Button>
-        </div>
-      </Sider>
-
-      <Layout className="main-layout">
-        <Content className="content-area">
-          {renderContent()}
+            <p>long content</p>
+            {
+              // indicates very long content
+              Array.from({ length: 100 }, (_, index) => (
+                <React.Fragment key={index}>
+                  {index % 20 === 0 && index ? 'more' : '...'}
+                  <br />
+                </React.Fragment>
+              ))
+            }
+          </div>
         </Content>
+        <Footer style={{ textAlign: 'center' }}>
+          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        </Footer>
       </Layout>
     </Layout>
   );
-}
+};
 
-export default TrangChu;
+export default App;

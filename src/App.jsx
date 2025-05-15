@@ -50,7 +50,7 @@ function App() {
       const data = await response.json();
 
       if (response.ok && data.token) {
-        message.success('Đăng nhập thành công');
+        // message.success('Đăng nhập thành công');
         localStorage.setItem('token', data.token);
 
         if (rememberMe) {
@@ -63,10 +63,10 @@ function App() {
 
         navigate('/TrangChu');
       } else {
-        message.error(data.message || 'Đăng nhập thất bại');
+        message.error(data.message || 'Đăng nhập thất bại!');
       }
     } catch (error) {
-      message.error('Đã có lỗi xảy ra. Vui lòng thử lại');
+      message.error('Sai tài khoản hoặc mật khẩu!');
     }
   };
 
