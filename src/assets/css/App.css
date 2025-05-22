@@ -1,0 +1,21 @@
+aside {
+  min-width: 260px !important;
+  padding-top: 80px !important;
+
+  -webkit-box-shadow: 6px 0px 14px -10px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 6px 0px 14px -10px rgba(66, 68, 90, 1);
+  box-shadow: 6px 0px 14px -10px rgba(66, 68, 90, 1);
+}
+
+.ant-menu {
+  border: none !important;
+}
+
+.ant-layout-sider-children {
+  position: relative !important;
+}
+
+.ant-menu-item:last-child {
+  position: absolute  !important;
+  bottom: 20px;
+}

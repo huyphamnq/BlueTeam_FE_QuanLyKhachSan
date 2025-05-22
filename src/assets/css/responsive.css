@@ -1,0 +1,10 @@
+@media screen and (max-width: 1200px) {
+    .auth-container {
+        padding: 40px;
+        width: 100%;
+      }
+    
+      .section {
+        display: none;
+      }
+}
