@@ -20,7 +20,7 @@ import dayjs from "dayjs";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 10;
 
 export default function Phong() {
   const [data, setData] = useState([]);
@@ -43,8 +43,13 @@ export default function Phong() {
           params: { PageNumber: page, PageSize: PAGE_SIZE },
         }
       );
-      setData(res.data.items);
-      setTotal(res.data.totalCount || 100);
+      const items = res.data.items;
+      setData(items);
+      if (items.length < PAGE_SIZE) {
+        setTotal((page - 1) * PAGE_SIZE + items.length);
+      } else {
+        setTotal(page * PAGE_SIZE + 1);
+      }
     } catch (error) {
       message.error("Lấy dữ liệu thất bại");
     }
@@ -225,10 +230,11 @@ export default function Phong() {
       <Title
         level={3}
         style={{
-          marginBottom: 24,
+          marginBottom: 40,
           fontWeight: "bold",
+          fontSize: 40,
           color: "#111",
-          textAlign: "center",
+          textAlign: "left",
         }}
       >
         Quản lý Khách hàng
@@ -248,8 +254,9 @@ export default function Phong() {
           size="middle"
           onSearch={onSearch}
           style={{
-            width: 280,
+            width: '100%',
             borderRadius: 6,
+            marginRight: 20,
           }}
         />
         <Button
@@ -355,11 +362,11 @@ export default function Phong() {
             <Input.Password placeholder="Nhập mật khẩu" />
           </Form.Item>
 
-          <Form.Item label="Ẩn khách hàng" name="hide" valuePropName="checked">
+          {/* <Form.Item label="Ẩn khách hàng" name="hide" valuePropName="checked">
             <Switch />
-          </Form.Item>
+          </Form.Item> */}
 
-          <Form.Item
+          {/* <Form.Item
             label="Sắp xếp"
             name="sapXep"
             rules={[
@@ -368,7 +375,7 @@ export default function Phong() {
             ]}
           >
             <InputNumber style={{ width: "100%" }} placeholder="Nhập số thứ tự" />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item
             label="Ngày đăng ký"
@@ -400,3 +407,4 @@ export default function Phong() {
     </div>
   );
 }
+
