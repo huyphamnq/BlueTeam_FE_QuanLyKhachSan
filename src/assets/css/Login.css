@@ -6,8 +6,6 @@
   background-color: #fefefe;
 }
 
-/* auth-container */
-
 .auth-container {
   width: 50%;
   padding: 100px 140px;
@@ -73,8 +71,6 @@ div h3 {
   height: 100%;
 }
 
-/*  */
-
 .signup-link {
   text-align: center;
   margin-top: 60px;
@@ -95,4 +91,17 @@ div h3 {
 
 .signup-link a:hover {
   border-bottom: 1px solid ;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

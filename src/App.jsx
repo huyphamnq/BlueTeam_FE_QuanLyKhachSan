@@ -1,11 +1,13 @@
 import React from 'react';
 import { Layout, Menu, theme } from 'antd';
-import { FaHome, FaUser, FaUsers, FaCloud, FaFileInvoice, FaHotel } from "react-icons/fa";
+import { FaUser, FaUsers, FaCloud, FaFileInvoice, FaHotel} from "react-icons/fa";
+import { MdHotel, MdDashboard } from "react-icons/md";
 import { IoLogOutSharp } from "react-icons/io5";
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 
-import TrangChu from './components/TrangChu';
+import BangDieuKhien from './components/BangDieuKhien';
 import Phong from './components/Phong';
+import DatPhong from './components/DatPhong'
 import KhachHang from './components/KhachHang';
 import NhanVien from './components/NhanVien';
 import DichVu from './components/DichVu';
@@ -28,10 +30,11 @@ const siderStyle = {
 };
 
 const menuItems = [
-  { icon: FaHome, label: 'Trang chủ', path: '/app/trangchu' },
-  { icon: FaHotel, label: 'Phòng', path: '/app/phong' },
+  { icon: MdDashboard, label: 'Bảng điều khiển', path: '/app/bangdieukhien' },
+  { icon: MdHotel, label: 'Đặt Phòng', path: '/app/datphong' },
   { icon: FaUser, label: 'Khách hàng', path: '/app/khachhang' },
   { icon: FaUsers, label: 'Nhân Viên', path: '/app/nhanvien' },
+  { icon: FaHotel, label: 'Phòng', path: '/app/phong' },
   { icon: FaCloud, label: 'Dịch vụ', path: '/app/dichvu' },
   { icon: FaFileInvoice, label: 'Hoá đơn', path: '/app/hoadon' },
   { icon: IoLogOutSharp, label: 'Đăng xuất', path: '/' },
@@ -60,7 +63,7 @@ const AppLayout = () => {
   }, [location.pathname]);
 
   const handleMenuClick = ({ key }) => {
-    if (key === '7') { // Đăng xuất
+    if (key === '7') {
       localStorage.removeItem('token');
       navigate('/');
     } else {
@@ -74,43 +77,42 @@ const AppLayout = () => {
       <Sider style={siderStyle}>
         <div className="demo-logo-vertical" />
         <Menu
-          theme="light"
+          theme="dark"
           mode="inline"
           selectedKeys={[selectedKey]}
           items={items}
           onClick={handleMenuClick}
         />
       </Sider>
-      <Layout style={{ backgroundColor: '#fff' }}>
-        <Content style={{ padding: '24px 16px 0', overflow: 'initial' }}>
+      <Layout style={{ backgroundColor: '#fff', padding: 24 }}>
+        <Content style={{overflow: 'initial' }}>
           <div
             style={{
-              padding: 24,
               minHeight: '80vh',
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
             }}
           >
             <Routes>
-              <Route path="trangchu" element={<TrangChu />} />
+              <Route path="bangdieukhhien" element={<BangDieuKhien />} />
               <Route path="phong" element={<Phong />} />
+              <Route path="datphong" element={<DatPhong />} />
               <Route path="khachhang" element={<KhachHang />} />
               <Route path="nhanvien" element={<NhanVien />} />
               <Route path="dichvu" element={<DichVu />} />
               <Route path="hoadon" element={<HoaDon />} />
-              <Route path="*" element={<TrangChu />} />
+              <Route path="*" element={<BangDieuKhien />} />
             </Routes>
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
+        {/* <Footer style={{ textAlign: 'center', backgroundColor: '#212121', height: 40 }}>
           QLKS ©{new Date().getFullYear()} Created by BlueTeam
-        </Footer>
+        </Footer> */}
       </Layout>
     </Layout>
   );
 };
 
-// App chính bọc Router
 const App = () => <AppLayout />;
 
 export default App;

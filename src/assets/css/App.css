@@ -5,6 +5,7 @@ aside {
   -webkit-box-shadow: 6px 0px 14px -10px rgba(66, 68, 90, 1);
   -moz-box-shadow: 6px 0px 14px -10px rgba(66, 68, 90, 1);
   box-shadow: 6px 0px 14px -10px rgba(66, 68, 90, 1);
+  background-color: #001529 !important;
 }
 
 .ant-menu {
@@ -18,4 +19,13 @@ aside {
 .ant-menu-item:last-child {
   position: absolute  !important;
   bottom: 20px;
+  background-color: #e75050;
+  color: #fff !important;
+}
+
+.ant-menu-item:last-child:hover {
+  background-color: #e75050 !important;
+  color: #fff !important;
+
+  opacity: 0.8;
 }

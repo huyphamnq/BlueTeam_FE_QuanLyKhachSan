@@ -14,15 +14,38 @@ import {
   Space,
   Tooltip,
   InputNumber,
+  Card,
+  Row,
+  Col,
+  Tag,
+  Avatar,
+  Divider,
+  Badge,
+  Skeleton,
+  Empty,
 } from "antd";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  UserOutlined,
+  PhoneOutlined,
+  MailOutlined,
+  IdcardOutlined,
+  CalendarOutlined,
+  PlusOutlined,
+  SearchOutlined,
+  FilterOutlined,
+  ExportOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
 import dayjs from "dayjs";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
+const { Search } = Input;
 const PAGE_SIZE = 10;
 
-export default function Phong() {
+export default function ImprovedCustomerManagement() {
   const [data, setData] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [total, setTotal] = useState(0);
@@ -154,70 +177,149 @@ export default function Phong() {
       title: "ID",
       dataIndex: "idKhachHang",
       key: "idKhachHang",
-      width: 60,
+      width: 80,
       sorter: (a, b) => a.idKhachHang - b.idKhachHang,
       align: "center",
+      render: (id) => (
+        <Badge 
+          count={id} 
+          style={{ 
+            backgroundColor: '#f0f0f0', 
+            color: '#666',
+            border: '1px solid #d9d9d9',
+            fontSize: '12px'
+          }} 
+        />
+      ),
     },
     {
-      title: "Họ Tên",
-      dataIndex: "hoTen",
-      key: "hoTen",
-      sorter: (a, b) => a.hoTen.localeCompare(b.hoTen),
+      title: "Thông tin khách hàng",
+      key: "customerInfo",
+      render: (_, record) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <Avatar 
+            size={40} 
+            icon={<UserOutlined />} 
+            style={{ 
+              backgroundColor: '#1890ff',
+              flexShrink: 0
+            }}
+          />
+          <div style={{ minWidth: 0 }}>
+            <div style={{ 
+              fontWeight: 600, 
+              fontSize: '14px',
+              marginBottom: 2,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}>
+              {record.hoTen}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Text type="secondary" style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: 4 }}>
+                <PhoneOutlined style={{ fontSize: '10px' }} />
+                {record.sdt}
+              </Text>
+              <Text type="secondary" style={{ 
+                fontSize: '12px', 
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 4
+              }}>
+                <MailOutlined style={{ fontSize: '10px' }} />
+                {record.email}
+              </Text>
+            </div>
+          </div>
+        </div>
+      ),
+      width: 280,
       ellipsis: true,
-    },
-    {
-      title: "SĐT",
-      dataIndex: "sdt",
-      key: "sdt",
-      responsive: ["md"],
-      ellipsis: true,
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-      ellipsis: true,
-      responsive: ["lg"],
     },
     {
       title: "CCCD",
       dataIndex: "cccd",
       key: "cccd",
-      ellipsis: true,
       responsive: ["lg"],
-      render: (text) => text.trim(),
+      render: (cccd) => (
+        <Tag icon={<IdcardOutlined />} color="blue">
+          {cccd?.trim()}
+        </Tag>
+      ),
+      width: 150,
     },
     {
       title: "Ngày đăng ký",
       dataIndex: "dataBegin",
       key: "dataBegin",
-      render: (text) => dayjs(text).format("DD/MM/YYYY"),
+      render: (date) => (
+        <div style={{ textAlign: 'center' }}>
+          <CalendarOutlined style={{ marginRight: 6, color: '#1890ff' }} />
+          <Text>{dayjs(date).format("DD/MM/YYYY")}</Text>
+        </div>
+      ),
       sorter: (a, b) => new Date(a.dataBegin) - new Date(b.dataBegin),
       responsive: ["md"],
       align: "center",
+      width: 140,
     },
     {
-      title: "Hành động",
+      title: "Thao tác",
       key: "actions",
-      width: 100,
+      width: 120,
       fixed: "right",
       render: (_, record) => (
-        <Space size="middle">
-          <Tooltip title="Sửa">
+        <Space size="small">
+          <Tooltip title="Chỉnh sửa">
             <Button
               type="text"
               icon={<EditOutlined />}
               onClick={() => onEdit(record.idKhachHang)}
+              style={{ 
+                color: '#1890ff',
+                border: '1px solid transparent',
+                borderRadius: '6px'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#f0f9ff';
+                e.target.style.borderColor = '#1890ff';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.borderColor = 'transparent';
+              }}
             />
           </Tooltip>
           <Tooltip title="Xóa">
             <Popconfirm
-              title="Bạn có chắc muốn xóa?"
+              title="Xác nhận xóa"
+              description="Bạn có chắc chắn muốn xóa khách hàng này?"
               onConfirm={() => onDelete(record.idKhachHang)}
               okText="Xóa"
               cancelText="Hủy"
+              okButtonProps={{ danger: true }}
             >
-              <Button type="text" icon={<DeleteOutlined />} danger />
+              <Button 
+                type="text" 
+                icon={<DeleteOutlined />} 
+                danger
+                style={{ 
+                  border: '1px solid transparent',
+                  borderRadius: '6px'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#fff2f0';
+                  e.target.style.borderColor = '#ff4d4f';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.borderColor = 'transparent';
+                }}
+              />
             </Popconfirm>
           </Tooltip>
         </Space>
@@ -226,185 +328,438 @@ export default function Phong() {
   ];
 
   return (
-    <div>
-      <Title
-        level={3}
-        style={{
-          marginBottom: 40,
-          fontWeight: "bold",
-          fontSize: 40,
-          color: "#111",
-          textAlign: "left",
-        }}
-      >
-        Quản lý Khách hàng
-      </Title>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
+    <div style={{ 
+      minHeight: '100vh'
+    }}>
+      {/* Header Section */}
+      {/* <Card 
+        style={{ 
           marginBottom: 24,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          border: 'none',
+          borderRadius: '12px'
         }}
+        bodyStyle={{ padding: '24px 32px' }}
       >
-        <Input.Search
-          placeholder="Tìm kiếm họ tên..."
-          allowClear
-          enterButton
-          size="middle"
-          onSearch={onSearch}
-          style={{
-            width: '100%',
-            borderRadius: 6,
-            marginRight: 20,
-          }}
-        />
-        <Button
-          type="primary"
-          onClick={onAdd}
-          style={{
-            borderRadius: 6,
-            fontWeight: "600",
-            padding: "0 16px",
-          }}
-          size="middle"
-        >
-          + Thêm mới
-        </Button>
-      </div>
+        <Row align="middle" justify="space-between">
+          <Col>
+            <Title
+              level={2}
+              style={{
+                margin: 0,
+                color: 'white',
+                fontWeight: 700,
+                fontSize: '28px',
+              }}
+            >
+              <UserOutlined style={{ marginRight: 12 }} />
+              Quản lý Khách hàng
+            </Title>
+            <Text style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px' }}>
+              Quản lý thông tin khách hàng của khách sạn
+            </Text>
+          </Col>
+          <Col>
+            <Badge count={total} showZero>
+              <Avatar 
+                size={64} 
+                icon={<UserOutlined />} 
+                style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  border: '2px solid rgba(255, 255, 255, 0.3)'
+                }} 
+              />
+            </Badge>
+          </Col>
+        </Row>
+      </Card> */}
 
-      <Table
-        columns={columns}
-        dataSource={filteredData}
-        rowKey="idKhachHang"
-        loading={loading}
-        pagination={false}
-        size="middle"
-        bordered
-        style={{ borderRadius: 6 }}
-        rowClassName={() => "table-row-hover"}
-      />
-
-      <div
+      {/* Control Panel */}
+      <Card
         style={{
-          marginTop: 24,
-          display: "flex",
-          justifyContent: "flex-end",
+          marginTop: 30,
+          marginBottom: 24,
+          borderRadius: '12px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
         }}
+        bodyStyle={{ padding: '0px' }}
       >
-        <Pagination
-          current={pageNumber}
-          pageSize={PAGE_SIZE}
-          total={total}
-          onChange={setPageNumber}
-          showSizeChanger={false}
-          size="small"
-          simple={false}
-        />
-      </div>
+        <Row gutter={[16, 16]} align="middle">
+          <Col xs={24} sm={16} md={18}>
+            <Search
+              placeholder="Tìm kiếm theo tên khách hàng..."
+              allowClear
+              enterButton={<SearchOutlined />}
+              size="large"
+              onSearch={onSearch}
+              style={{
+                '& .ant-input': {
+                  borderRadius: '8px 0 0 8px',
+                },
+                '& .ant-btn': {
+                  borderRadius: '0 8px 8px 0',
+                  background: '#1890ff',
+                  borderColor: '#1890ff'
+                }
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={8} md={6}>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={onAdd}
+              size="large"
+              block
+              style={{
+                height: '40px',
+                borderRadius: '8px',
+                fontWeight: 600,
+                background: '#1677ff',
+                border: 'none',
+                boxShadow: '0 2px 6px rgba(82, 196, 26, 0.3)'
+              }}
+            >
+              Thêm khách hàng
+            </Button>
+          </Col>
+        </Row>
+      </Card>
 
+      {/* Table Section */}
+      <Card
+        style={{
+          borderRadius: '12px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+        }}
+        bodyStyle={{ padding: 0 }}
+      >
+        {loading ? (
+          <div style={{ padding: '24px' }}>
+            <Skeleton active paragraph={{ rows: 8 }} />
+          </div>
+        ) : filteredData.length === 0 ? (
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description="Không có dữ liệu khách hàng"
+            style={{ padding: '60px 24px' }}
+          >
+            <Button type="primary" icon={<PlusOutlined />} onClick={onAdd}>
+              Thêm khách hàng đầu tiên
+            </Button>
+          </Empty>
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={filteredData}
+            rowKey="idKhachHang"
+            loading={loading}
+            pagination={false}
+            size="middle"
+            style={{ borderRadius: '12px' }}
+            rowClassName={(record, index) => 
+              index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
+            }
+            scroll={{ x: 800 }}
+          />
+        )}
+
+        {/* Custom Pagination */}
+        {filteredData.length > 0 && (
+          <div
+            style={{
+              padding: '16px 24px',
+              borderTop: '1px solid #f0f0f0',
+              background: '#fafafa',
+              borderRadius: '0 0 12px 12px'
+            }}
+          >
+            <Row justify="space-between" align="middle">
+              <Col>
+                <Text type="secondary">
+                  Hiển thị {((pageNumber - 1) * PAGE_SIZE) + 1} - {Math.min(pageNumber * PAGE_SIZE, total)} 
+                  {' '}trong tổng số {total} khách hàng
+                </Text>
+              </Col>
+              <Col>
+                <Pagination
+                  current={pageNumber}
+                  pageSize={PAGE_SIZE}
+                  total={total}
+                  onChange={setPageNumber}
+                  showSizeChanger={false}
+                  showQuickJumper
+                  size="default"
+                />
+              </Col>
+            </Row>
+          </div>
+        )}
+      </Card>
+
+      {/* Enhanced Modal */}
       <Modal
-        title={editingId ? "Chỉnh sửa khách hàng" : "Thêm khách hàng mới"}
+        title={
+          <div style={{ 
+            textAlign: 'center', 
+            paddingBottom: '16px',
+            borderBottom: '1px solid #f0f0f0',
+            marginBottom: '24px'
+          }}>
+            <UserAddOutlined style={{ 
+              fontSize: '24px', 
+              color: '#1890ff', 
+              marginRight: '8px' 
+            }} />
+            <span style={{ fontSize: '18px', fontWeight: 600 }}>
+              {editingId ? "Chỉnh sửa thông tin khách hàng" : "Thêm khách hàng mới"}
+            </span>
+          </div>
+        }
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
         footer={null}
         destroyOnClose
         centered
+        width={600}
+        style={{ borderRadius: '12px' }}
       >
         <Form
           form={form}
           layout="vertical"
           onFinish={onFinish}
           initialValues={{ hide: true, sapXep: 0, dataBegin: dayjs() }}
-          style={{ maxWidth: 480, margin: "auto" }}
+          style={{ maxWidth: '100%' }}
         >
-          <Form.Item
-            label="Họ Tên"
-            name="hoTen"
-            rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
-          >
-            <Input placeholder="Nhập họ tên" />
-          </Form.Item>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                label={
+                  <span>
+                    <UserOutlined style={{ marginRight: 6 }} />
+                    Họ và tên
+                  </span>
+                }
+                name="hoTen"
+                rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
+              >
+                <Input 
+                  placeholder="Nhập họ và tên khách hàng" 
+                  size="large"
+                  style={{ borderRadius: '8px' }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
-          <Form.Item
-            label="Số điện thoại"
-            name="sdt"
-            rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
-          >
-            <Input placeholder="Nhập số điện thoại" />
-          </Form.Item>
+          <Row gutter={16}>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                label={
+                  <span>
+                    <PhoneOutlined style={{ marginRight: 6 }} />
+                    Số điện thoại
+                  </span>
+                }
+                name="sdt"
+                rules={[
+                  { required: true, message: "Vui lòng nhập số điện thoại" },
+                  { pattern: /^[0-9]{10,11}$/, message: "Số điện thoại không hợp lệ" }
+                ]}
+              >
+                <Input 
+                  placeholder="Nhập số điện thoại" 
+                  size="large"
+                  style={{ borderRadius: '8px' }}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                label={
+                  <span>
+                    <IdcardOutlined style={{ marginRight: 6 }} />
+                    Số CCCD
+                  </span>
+                }
+                name="cccd"
+                rules={[
+                  { required: true, message: "Vui lòng nhập số CCCD" },
+                  { pattern: /^[0-9]{9,12}$/, message: "CCCD không hợp lệ" }
+                ]}
+              >
+                <Input 
+                  placeholder="Nhập số CCCD"
+                  size="large"
+                  style={{ borderRadius: '8px' }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
-          <Form.Item
-            label="CCCD"
-            name="cccd"
-            rules={[{ required: true, message: "Vui lòng nhập CCCD" }]}
-          >
-            <Input placeholder="Nhập CCCD" />
-          </Form.Item>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                label={
+                  <span>
+                    <MailOutlined style={{ marginRight: 6 }} />
+                    Email
+                  </span>
+                }
+                name="email"
+                rules={[
+                  { type: "email", message: "Email không hợp lệ" },
+                  { required: true, message: "Vui lòng nhập email" },
+                ]}
+              >
+                <Input 
+                  placeholder="Nhập địa chỉ email" 
+                  size="large"
+                  style={{ borderRadius: '8px' }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              { type: "email", message: "Email không hợp lệ" },
-              { required: true, message: "Vui lòng nhập email" },
-            ]}
-          >
-            <Input placeholder="Nhập email" />
-          </Form.Item>
+          <Row gutter={16}>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                label="Mật khẩu"
+                name="matKhau"
+                rules={[{ required: !editingId, message: "Vui lòng nhập mật khẩu" }]}
+                hasFeedback
+              >
+                <Input.Password 
+                  placeholder="Nhập mật khẩu" 
+                  size="large"
+                  style={{ borderRadius: '8px' }}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                label={
+                  <span>
+                    <CalendarOutlined style={{ marginRight: 6 }} />
+                    Ngày đăng ký
+                  </span>
+                }
+                name="dataBegin"
+                rules={[{ required: true, message: "Vui lòng chọn ngày" }]}
+              >
+                <DatePicker
+                  style={{ width: "100%", borderRadius: '8px' }}
+                  size="large"
+                  format="DD/MM/YYYY"
+                  disabledDate={(current) => current && current > dayjs().endOf("day")}
+                  placeholder="Chọn ngày đăng ký"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
-          <Form.Item
-            label="Mật khẩu"
-            name="matKhau"
-            rules={[{ required: !editingId, message: "Vui lòng nhập mật khẩu" }]}
-            hasFeedback
-          >
-            <Input.Password placeholder="Nhập mật khẩu" />
-          </Form.Item>
+          <Divider style={{ margin: '24px 0' }} />
 
-          {/* <Form.Item label="Ẩn khách hàng" name="hide" valuePropName="checked">
-            <Switch />
-          </Form.Item> */}
-
-          {/* <Form.Item
-            label="Sắp xếp"
-            name="sapXep"
-            rules={[
-              { type: "number", message: "Phải là số" },
-              { required: true, message: "Vui lòng nhập số thứ tự" },
-            ]}
-          >
-            <InputNumber style={{ width: "100%" }} placeholder="Nhập số thứ tự" />
-          </Form.Item> */}
-
-          <Form.Item
-            label="Ngày đăng ký"
-            name="dataBegin"
-            rules={[{ required: true, message: "Vui lòng chọn ngày" }]}
-          >
-            <DatePicker
-              style={{ width: "100%" }}
-              format="DD/MM/YYYY"
-              disabledDate={(current) => current && current > dayjs().endOf("day")}
-            />
-          </Form.Item>
-
-          <Form.Item style={{ textAlign: "right", marginTop: 16 }}>
-            <Button
-              type="default"
-              onClick={() => setModalOpen(false)}
-              style={{ marginRight: 8 }}
-              disabled={posting}
-            >
-              Hủy
-            </Button>
-            <Button type="primary" htmlType="submit" loading={posting}>
-              {editingId ? "Cập nhật" : "Thêm"}
-            </Button>
+          <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
+            <Space size="middle">
+              <Button
+                size="large"
+                onClick={() => setModalOpen(false)}
+                disabled={posting}
+                style={{ 
+                  borderRadius: '8px',
+                  minWidth: '100px'
+                }}
+              >
+                Hủy
+              </Button>
+              <Button 
+                type="primary" 
+                htmlType="submit" 
+                loading={posting}
+                size="large"
+                style={{ 
+                  borderRadius: '8px',
+                  minWidth: '120px',
+                  background: editingId ? '#52c41a' : '#1890ff',
+                  borderColor: editingId ? '#52c41a' : '#1890ff'
+                }}
+              >
+                {editingId ? "Cập nhật" : "Thêm mới"}
+              </Button>
+            </Space>
           </Form.Item>
         </Form>
       </Modal>
+
+      <style jsx>{`
+        .table-row-light {
+          background-color: #ffffff;
+        }
+        .table-row-dark {
+          background-color: #fafafa;
+        }
+        .table-row-light:hover,
+        .table-row-dark:hover {
+          background-color: #e6f7ff !important;
+        }
+        .ant-table-thead > tr > th {
+          background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+          border: none;
+          font-weight: 600;
+          color: #495057;
+          font-size: 13px;
+          padding: 16px 12px;
+        }
+        .ant-table-tbody > tr > td {
+          border: none;
+          padding: 12px;
+          border-bottom: 1px solid #f0f0f0;
+        }
+        .ant-pagination .ant-pagination-item {
+          border-radius: 6px;
+          border: 1px solid #d9d9d9;
+        }
+        .ant-pagination .ant-pagination-item-active {
+          background: #1890ff;
+          border-color: #1890ff;
+        }
+        .ant-pagination .ant-pagination-item-active a {
+          color: white;
+        }
+        .ant-modal-content {
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        .ant-modal-header {
+          border-bottom: none;
+          padding: 24px 24px 0;
+        }
+        .ant-modal-body {
+          padding: 0 24px 24px;
+        }
+        .ant-form-item-label > label {
+          font-weight: 500;
+          color: #262626;
+        }
+        .ant-input:focus,
+        .ant-input-focused,
+        .ant-picker:focus,
+        .ant-picker-focused {
+          border-color: #40a9ff;
+          box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+        .ant-btn-primary:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+        }
+        .ant-card {
+          transition: all 0.3s ease;
+        }
+        .ant-card:hover {
+          box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+      `}</style>
     </div>
   );
 }
-
