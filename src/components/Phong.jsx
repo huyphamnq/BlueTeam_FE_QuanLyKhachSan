@@ -196,7 +196,7 @@ const Phong = () => {
                     </div>
                   }
                 >
-                  <h3 style={{ marginBottom: 8 }}>{phong.tenPhong}</h3>
+                  <h3 style={{ marginBottom: 8, fontWeight: 700 }}>{phong.tenPhong}</h3>
 
                   <div style={{ marginTop: 8 }}>
                     {phong.giamGia > 0 ? (

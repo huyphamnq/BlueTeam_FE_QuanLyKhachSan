@@ -331,48 +331,6 @@ export default function ImprovedCustomerManagement() {
     <div style={{ 
       minHeight: '100vh'
     }}>
-      {/* Header Section */}
-      {/* <Card 
-        style={{ 
-          marginBottom: 24,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          border: 'none',
-          borderRadius: '12px'
-        }}
-        bodyStyle={{ padding: '24px 32px' }}
-      >
-        <Row align="middle" justify="space-between">
-          <Col>
-            <Title
-              level={2}
-              style={{
-                margin: 0,
-                color: 'white',
-                fontWeight: 700,
-                fontSize: '28px',
-              }}
-            >
-              <UserOutlined style={{ marginRight: 12 }} />
-              Quản lý Khách hàng
-            </Title>
-            <Text style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px' }}>
-              Quản lý thông tin khách hàng của khách sạn
-            </Text>
-          </Col>
-          <Col>
-            <Badge count={total} showZero>
-              <Avatar 
-                size={64} 
-                icon={<UserOutlined />} 
-                style={{ 
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  border: '2px solid rgba(255, 255, 255, 0.3)'
-                }} 
-              />
-            </Badge>
-          </Col>
-        </Row>
-      </Card> */}
 
       {/* Control Panel */}
       <Card
@@ -382,7 +340,7 @@ export default function ImprovedCustomerManagement() {
           borderRadius: '12px',
           boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
         }}
-        bodyStyle={{ padding: '0px' }}
+        bodyStyle={{ padding: '24px' }}
       >
         <Row gutter={[16, 16]} align="middle">
           <Col xs={24} sm={16} md={18}>
@@ -399,7 +357,7 @@ export default function ImprovedCustomerManagement() {
                 '& .ant-btn': {
                   borderRadius: '0 8px 8px 0',
                   background: '#1890ff',
-                  borderColor: '#1890ff'
+                  // borderColor: '#1890ff'
                 }
               }}
             />

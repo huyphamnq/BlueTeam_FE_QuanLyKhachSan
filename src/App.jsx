@@ -63,7 +63,7 @@ const AppLayout = () => {
   }, [location.pathname]);
 
   const handleMenuClick = ({ key }) => {
-    if (key === '7') {
+    if (key === '8') {
       localStorage.removeItem('token');
       navigate('/');
     } else {
