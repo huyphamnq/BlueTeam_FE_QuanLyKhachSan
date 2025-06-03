@@ -17,7 +17,7 @@ aside {
 }
 
 .ant-menu-item:last-child {
-  position: absolute  !important;
+  position: absolute !important;
   bottom: 20px;
   background-color: #e75050;
   color: #fff !important;

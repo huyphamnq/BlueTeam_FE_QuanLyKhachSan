@@ -180,14 +180,14 @@ export default function NhanVienManagement() {
       sorter: (a, b) => a.idNhanVien - b.idNhanVien,
       align: "center",
       render: (id) => (
-        <Badge 
-          count={id} 
-          style={{ 
-            backgroundColor: '#f0f0f0', 
-            color: '#666',
-            border: '1px solid #d9d9d9',
-            fontSize: '12px'
-          }} 
+        <Badge
+          count={id}
+          style={{
+            backgroundColor: "#f0f0f0",
+            color: "#666",
+            border: "1px solid #d9d9d9",
+            fontSize: "12px",
+          }}
         />
       ),
     },
@@ -195,41 +195,54 @@ export default function NhanVienManagement() {
       title: "Thông tin nhân viên",
       key: "staffInfo",
       render: (_, record) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Avatar 
-            size={40} 
-            icon={<UserOutlined />} 
-            style={{ 
-              backgroundColor: '#1890ff',
-              flexShrink: 0
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Avatar
+            size={40}
+            icon={<UserOutlined />}
+            style={{
+              backgroundColor: "#1890ff",
+              flexShrink: 0,
             }}
           />
           <div style={{ minWidth: 0 }}>
-            <div style={{ 
-              fontWeight: 600, 
-              fontSize: '14px',
-              marginBottom: 2,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap'
-            }}>
+            <div
+              style={{
+                fontWeight: 600,
+                fontSize: "14px",
+                marginBottom: 2,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
               {record.hoTen}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Text type="secondary" style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: 4 }}>
-                <PhoneOutlined style={{ fontSize: '10px' }} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Text
+                type="secondary"
+                style={{
+                  fontSize: "12px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                <PhoneOutlined style={{ fontSize: "10px" }} />
                 {record.sdt}
               </Text>
-              <Text type="secondary" style={{ 
-                fontSize: '12px', 
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4
-              }}>
-                <MailOutlined style={{ fontSize: '10px' }} />
+              <Text
+                type="secondary"
+                style={{
+                  fontSize: "12px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                <MailOutlined style={{ fontSize: "10px" }} />
                 {record.email}
               </Text>
             </div>
@@ -252,8 +265,8 @@ export default function NhanVienManagement() {
       dataIndex: "dateBegin",
       key: "dateBegin",
       render: (date) => (
-        <div style={{ textAlign: 'center' }}>
-          <CalendarOutlined style={{ marginRight: 6, color: '#1890ff' }} />
+        <div style={{ textAlign: "center" }}>
+          <CalendarOutlined style={{ marginRight: 6, color: "#1890ff" }} />
           <Text>{dayjs(date).format("DD/MM/YYYY")}</Text>
         </div>
       ),
@@ -274,18 +287,18 @@ export default function NhanVienManagement() {
               type="text"
               icon={<EditOutlined />}
               onClick={() => onEdit(record.idNhanVien)}
-              style={{ 
-                color: '#1890ff',
-                border: '1px solid transparent',
-                borderRadius: '6px'
+              style={{
+                color: "#1890ff",
+                border: "1px solid transparent",
+                borderRadius: "6px",
               }}
               onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#f0f9ff';
-                e.target.style.borderColor = '#1890ff';
+                e.target.style.backgroundColor = "#f0f9ff";
+                e.target.style.borderColor = "#1890ff";
               }}
               onMouseLeave={(e) => {
-                e.target.style.backgroundColor = 'transparent';
-                e.target.style.borderColor = 'transparent';
+                e.target.style.backgroundColor = "transparent";
+                e.target.style.borderColor = "transparent";
               }}
             />
           </Tooltip>
@@ -298,21 +311,21 @@ export default function NhanVienManagement() {
               cancelText="Hủy"
               okButtonProps={{ danger: true }}
             >
-              <Button 
-                type="text" 
-                icon={<DeleteOutlined />} 
+              <Button
+                type="text"
+                icon={<DeleteOutlined />}
                 danger
-                style={{ 
-                  border: '1px solid transparent',
-                  borderRadius: '6px'
+                style={{
+                  border: "1px solid transparent",
+                  borderRadius: "6px",
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#fff2f0';
-                  e.target.style.borderColor = '#ff4d4f';
+                  e.target.style.backgroundColor = "#fff2f0";
+                  e.target.style.borderColor = "#ff4d4f";
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'transparent';
-                  e.target.style.borderColor = 'transparent';
+                  e.target.style.backgroundColor = "transparent";
+                  e.target.style.borderColor = "transparent";
                 }}
               />
             </Popconfirm>
@@ -323,16 +336,16 @@ export default function NhanVienManagement() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div style={{ minHeight: "100vh" }}>
       {/* Control Panel */}
       <Card
         style={{
           marginTop: 30,
           marginBottom: 24,
-          borderRadius: '12px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          borderRadius: "12px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
         }}
-        bodyStyle={{ padding: '24px' }}
+        bodyStyle={{ padding: "24px" }}
       >
         <Row gutter={[16, 16]} align="middle">
           <Col xs={24} sm={16} md={18}>
@@ -343,7 +356,7 @@ export default function NhanVienManagement() {
               size="large"
               onSearch={onSearch}
               style={{
-                borderRadius: '8px',
+                borderRadius: "8px",
               }}
             />
           </Col>
@@ -355,12 +368,12 @@ export default function NhanVienManagement() {
               size="large"
               block
               style={{
-                height: '40px',
-                borderRadius: '8px',
+                height: "40px",
+                borderRadius: "8px",
                 fontWeight: 600,
-                background: '#1677ff',
-                border: 'none',
-                boxShadow: '0 2px 6px rgba(82, 196, 26, 0.3)'
+                background: "#1677ff",
+                border: "none",
+                boxShadow: "0 2px 6px rgba(82, 196, 26, 0.3)",
               }}
             >
               Thêm nhân viên
@@ -372,20 +385,20 @@ export default function NhanVienManagement() {
       {/* Table Section */}
       <Card
         style={{
-          borderRadius: '12px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+          borderRadius: "12px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
         }}
         bodyStyle={{ padding: 0 }}
       >
         {loading ? (
-          <div style={{ padding: '24px' }}>
+          <div style={{ padding: "24px" }}>
             <Skeleton active paragraph={{ rows: 8 }} />
           </div>
         ) : filteredData.length === 0 ? (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
             description="Không có dữ liệu nhân viên"
-            style={{ padding: '60px 24px' }}
+            style={{ padding: "60px 24px" }}
           >
             <Button type="primary" icon={<PlusOutlined />} onClick={onAdd}>
               Thêm nhân viên đầu tiên
@@ -399,9 +412,9 @@ export default function NhanVienManagement() {
             loading={loading}
             pagination={false}
             size="middle"
-            style={{ borderRadius: '12px' }}
-            rowClassName={(record, index) => 
-              index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
+            style={{ borderRadius: "12px" }}
+            rowClassName={(record, index) =>
+              index % 2 === 0 ? "table-row-light" : "table-row-dark"
             }
             scroll={{ x: 800 }}
           />
@@ -411,17 +424,18 @@ export default function NhanVienManagement() {
         {filteredData.length > 0 && (
           <div
             style={{
-              padding: '16px 24px',
-              borderTop: '1px solid #f0f0f0',
-              background: '#fafafa',
-              borderRadius: '0 0 12px 12px'
+              padding: "16px 24px",
+              borderTop: "1px solid #f0f0f0",
+              background: "#fafafa",
+              borderRadius: "0 0 12px 12px",
             }}
           >
             <Row justify="space-between" align="middle">
               <Col>
                 <Text type="secondary">
-                  Hiển thị {((pageNumber - 1) * PAGE_SIZE) + 1} - {Math.min(pageNumber * PAGE_SIZE, total)} 
-                  {' '}trong tổng số {total} nhân viên
+                  Hiển thị {(pageNumber - 1) * PAGE_SIZE + 1} -{" "}
+                  {Math.min(pageNumber * PAGE_SIZE, total)} trong tổng số{" "}
+                  {total} nhân viên
                 </Text>
               </Col>
               <Col>
@@ -443,19 +457,25 @@ export default function NhanVienManagement() {
       {/* Modal Form */}
       <Modal
         title={
-          <div style={{ 
-            textAlign: 'center', 
-            paddingBottom: '16px',
-            borderBottom: '1px solid #f0f0f0',
-            marginBottom: '24px'
-          }}>
-            <TeamOutlined style={{ 
-              fontSize: '24px', 
-              color: '#1890ff', 
-              marginRight: '8px' 
-            }} />
-            <span style={{ fontSize: '18px', fontWeight: 600 }}>
-              {editingId ? "Chỉnh sửa thông tin nhân viên" : "Thêm nhân viên mới"}
+          <div
+            style={{
+              textAlign: "center",
+              paddingBottom: "16px",
+              borderBottom: "1px solid #f0f0f0",
+              marginBottom: "24px",
+            }}
+          >
+            <TeamOutlined
+              style={{
+                fontSize: "24px",
+                color: "#1890ff",
+                marginRight: "8px",
+              }}
+            />
+            <span style={{ fontSize: "18px", fontWeight: 600 }}>
+              {editingId
+                ? "Chỉnh sửa thông tin nhân viên"
+                : "Thêm nhân viên mới"}
             </span>
           </div>
         }
@@ -484,10 +504,10 @@ export default function NhanVienManagement() {
                 name="hoTen"
                 rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
               >
-                <Input 
-                  placeholder="Nhập họ và tên nhân viên" 
+                <Input
+                  placeholder="Nhập họ và tên nhân viên"
                   size="large"
-                  style={{ borderRadius: '8px' }}
+                  style={{ borderRadius: "8px" }}
                 />
               </Form.Item>
             </Col>
@@ -504,13 +524,16 @@ export default function NhanVienManagement() {
                 name="sdt"
                 rules={[
                   { required: true, message: "Vui lòng nhập số điện thoại" },
-                  { pattern: /^[0-9]{10,11}$/, message: "Số điện thoại không hợp lệ" }
+                  {
+                    pattern: /^[0-9]{10,11}$/,
+                    message: "Số điện thoại không hợp lệ",
+                  },
                 ]}
               >
-                <Input 
-                  placeholder="Nhập số điện thoại" 
+                <Input
+                  placeholder="Nhập số điện thoại"
                   size="large"
-                  style={{ borderRadius: '8px' }}
+                  style={{ borderRadius: "8px" }}
                 />
               </Form.Item>
             </Col>
@@ -523,14 +546,12 @@ export default function NhanVienManagement() {
                   </span>
                 }
                 name="diaChi"
-                rules={[
-                  { required: true, message: "Vui lòng nhập địa chỉ" }
-                ]}
+                rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
               >
-                <Input 
+                <Input
                   placeholder="Nhập địa chỉ"
                   size="large"
-                  style={{ borderRadius: '8px' }}
+                  style={{ borderRadius: "8px" }}
                 />
               </Form.Item>
             </Col>
@@ -551,10 +572,10 @@ export default function NhanVienManagement() {
                   { required: true, message: "Vui lòng nhập email" },
                 ]}
               >
-                <Input 
-                  placeholder="Nhập địa chỉ email" 
+                <Input
+                  placeholder="Nhập địa chỉ email"
                   size="large"
-                  style={{ borderRadius: '8px' }}
+                  style={{ borderRadius: "8px" }}
                 />
               </Form.Item>
             </Col>
@@ -565,13 +586,15 @@ export default function NhanVienManagement() {
               <Form.Item
                 label="Mật khẩu"
                 name="matKhau"
-                rules={[{ required: !editingId, message: "Vui lòng nhập mật khẩu" }]}
+                rules={[
+                  { required: !editingId, message: "Vui lòng nhập mật khẩu" },
+                ]}
                 hasFeedback
               >
-                <Input.Password 
-                  placeholder="Nhập mật khẩu" 
+                <Input.Password
+                  placeholder="Nhập mật khẩu"
                   size="large"
-                  style={{ borderRadius: '8px' }}
+                  style={{ borderRadius: "8px" }}
                 />
               </Form.Item>
             </Col>
@@ -587,10 +610,12 @@ export default function NhanVienManagement() {
                 rules={[{ required: true, message: "Vui lòng chọn ngày" }]}
               >
                 <DatePicker
-                  style={{ width: "100%", borderRadius: '8px' }}
+                  style={{ width: "100%", borderRadius: "8px" }}
                   size="large"
                   format="DD/MM/YYYY"
-                  disabledDate={(current) => current && current > dayjs().endOf("day")}
+                  disabledDate={(current) =>
+                    current && current > dayjs().endOf("day")
+                  }
                   placeholder="Chọn ngày bắt đầu"
                 />
               </Form.Item>
@@ -607,7 +632,7 @@ export default function NhanVienManagement() {
                 <Select
                   placeholder="Chọn chức vụ"
                   size="large"
-                  style={{ width: '100%', borderRadius: '8px' }}
+                  style={{ width: "100%", borderRadius: "8px" }}
                 >
                   <Select.Option value={1}>Quản lý</Select.Option>
                   <Select.Option value={2}>Nhân viên</Select.Option>
@@ -617,31 +642,31 @@ export default function NhanVienManagement() {
             </Col>
           </Row>
 
-          <Divider style={{ margin: '24px 0' }} />
+          <Divider style={{ margin: "24px 0" }} />
 
-          <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
+          <Form.Item style={{ marginBottom: 0, textAlign: "right" }}>
             <Space size="middle">
               <Button
                 size="large"
                 onClick={() => setModalOpen(false)}
                 disabled={posting}
-                style={{ 
-                  borderRadius: '8px',
-                  minWidth: '100px'
+                style={{
+                  borderRadius: "8px",
+                  minWidth: "100px",
                 }}
               >
                 Hủy
               </Button>
-              <Button 
-                type="primary" 
-                htmlType="submit" 
+              <Button
+                type="primary"
+                htmlType="submit"
                 loading={posting}
                 size="large"
-                style={{ 
-                  borderRadius: '8px',
-                  minWidth: '120px',
-                  background: editingId ? '#52c41a' : '#1890ff',
-                  borderColor: editingId ? '#52c41a' : '#1890ff'
+                style={{
+                  borderRadius: "8px",
+                  minWidth: "120px",
+                  background: editingId ? "#52c41a" : "#1890ff",
+                  borderColor: editingId ? "#52c41a" : "#1890ff",
                 }}
               >
                 {editingId ? "Cập nhật" : "Thêm mới"}

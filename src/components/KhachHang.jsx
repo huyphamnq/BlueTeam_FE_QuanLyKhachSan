@@ -181,14 +181,14 @@ export default function ImprovedCustomerManagement() {
       sorter: (a, b) => a.idKhachHang - b.idKhachHang,
       align: "center",
       render: (id) => (
-        <Badge 
-          count={id} 
-          style={{ 
-            backgroundColor: '#f0f0f0', 
-            color: '#666',
-            border: '1px solid #d9d9d9',
-            fontSize: '12px'
-          }} 
+        <Badge
+          count={id}
+          style={{
+            backgroundColor: "#f0f0f0",
+            color: "#666",
+            border: "1px solid #d9d9d9",
+            fontSize: "12px",
+          }}
         />
       ),
     },
@@ -196,41 +196,54 @@ export default function ImprovedCustomerManagement() {
       title: "Thông tin khách hàng",
       key: "customerInfo",
       render: (_, record) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Avatar 
-            size={40} 
-            icon={<UserOutlined />} 
-            style={{ 
-              backgroundColor: '#1890ff',
-              flexShrink: 0
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Avatar
+            size={40}
+            icon={<UserOutlined />}
+            style={{
+              backgroundColor: "#1890ff",
+              flexShrink: 0,
             }}
           />
           <div style={{ minWidth: 0 }}>
-            <div style={{ 
-              fontWeight: 600, 
-              fontSize: '14px',
-              marginBottom: 2,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap'
-            }}>
+            <div
+              style={{
+                fontWeight: 600,
+                fontSize: "14px",
+                marginBottom: 2,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
               {record.hoTen}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Text type="secondary" style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: 4 }}>
-                <PhoneOutlined style={{ fontSize: '10px' }} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Text
+                type="secondary"
+                style={{
+                  fontSize: "12px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                <PhoneOutlined style={{ fontSize: "10px" }} />
                 {record.sdt}
               </Text>
-              <Text type="secondary" style={{ 
-                fontSize: '12px', 
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4
-              }}>
-                <MailOutlined style={{ fontSize: '10px' }} />
+              <Text
+                type="secondary"
+                style={{
+                  fontSize: "12px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                <MailOutlined style={{ fontSize: "10px" }} />
                 {record.email}
               </Text>
             </div>
@@ -257,8 +270,8 @@ export default function ImprovedCustomerManagement() {
       dataIndex: "dataBegin",
       key: "dataBegin",
       render: (date) => (
-        <div style={{ textAlign: 'center' }}>
-          <CalendarOutlined style={{ marginRight: 6, color: '#1890ff' }} />
+        <div style={{ textAlign: "center" }}>
+          <CalendarOutlined style={{ marginRight: 6, color: "#1890ff" }} />
           <Text>{dayjs(date).format("DD/MM/YYYY")}</Text>
         </div>
       ),
@@ -279,18 +292,18 @@ export default function ImprovedCustomerManagement() {
               type="text"
               icon={<EditOutlined />}
               onClick={() => onEdit(record.idKhachHang)}
-              style={{ 
-                color: '#1890ff',
-                border: '1px solid transparent',
-                borderRadius: '6px'
+              style={{
+                color: "#1890ff",
+                border: "1px solid transparent",
+                borderRadius: "6px",
               }}
               onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#f0f9ff';
-                e.target.style.borderColor = '#1890ff';
+                e.target.style.backgroundColor = "#f0f9ff";
+                e.target.style.borderColor = "#1890ff";
               }}
               onMouseLeave={(e) => {
-                e.target.style.backgroundColor = 'transparent';
-                e.target.style.borderColor = 'transparent';
+                e.target.style.backgroundColor = "transparent";
+                e.target.style.borderColor = "transparent";
               }}
             />
           </Tooltip>
@@ -303,21 +316,21 @@ export default function ImprovedCustomerManagement() {
               cancelText="Hủy"
               okButtonProps={{ danger: true }}
             >
-              <Button 
-                type="text" 
-                icon={<DeleteOutlined />} 
+              <Button
+                type="text"
+                icon={<DeleteOutlined />}
                 danger
-                style={{ 
-                  border: '1px solid transparent',
-                  borderRadius: '6px'
+                style={{
+                  border: "1px solid transparent",
+                  borderRadius: "6px",
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#fff2f0';
-                  e.target.style.borderColor = '#ff4d4f';
+                  e.target.style.backgroundColor = "#fff2f0";
+                  e.target.style.borderColor = "#ff4d4f";
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'transparent';
-                  e.target.style.borderColor = 'transparent';
+                  e.target.style.backgroundColor = "transparent";
+                  e.target.style.borderColor = "transparent";
                 }}
               />
             </Popconfirm>
@@ -328,19 +341,20 @@ export default function ImprovedCustomerManagement() {
   ];
 
   return (
-    <div style={{ 
-      minHeight: '100vh'
-    }}>
-
+    <div
+      style={{
+        minHeight: "100vh",
+      }}
+    >
       {/* Control Panel */}
       <Card
         style={{
           marginTop: 30,
           marginBottom: 24,
-          borderRadius: '12px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          borderRadius: "12px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
         }}
-        bodyStyle={{ padding: '24px' }}
+        bodyStyle={{ padding: "24px" }}
       >
         <Row gutter={[16, 16]} align="middle">
           <Col xs={24} sm={16} md={18}>
@@ -351,14 +365,14 @@ export default function ImprovedCustomerManagement() {
               size="large"
               onSearch={onSearch}
               style={{
-                '& .ant-input': {
-                  borderRadius: '8px 0 0 8px',
+                "& .ant-input": {
+                  borderRadius: "8px 0 0 8px",
                 },
-                '& .ant-btn': {
-                  borderRadius: '0 8px 8px 0',
-                  background: '#1890ff',
+                "& .ant-btn": {
+                  borderRadius: "0 8px 8px 0",
+                  background: "#1890ff",
                   // borderColor: '#1890ff'
-                }
+                },
               }}
             />
           </Col>
@@ -370,12 +384,12 @@ export default function ImprovedCustomerManagement() {
               size="large"
               block
               style={{
-                height: '40px',
-                borderRadius: '8px',
+                height: "40px",
+                borderRadius: "8px",
                 fontWeight: 600,
-                background: '#1677ff',
-                border: 'none',
-                boxShadow: '0 2px 6px rgba(82, 196, 26, 0.3)'
+                background: "#1677ff",
+                border: "none",
+                boxShadow: "0 2px 6px rgba(82, 196, 26, 0.3)",
               }}
             >
               Thêm khách hàng
@@ -387,20 +401,20 @@ export default function ImprovedCustomerManagement() {
       {/* Table Section */}
       <Card
         style={{
-          borderRadius: '12px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+          borderRadius: "12px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
         }}
         bodyStyle={{ padding: 0 }}
       >
         {loading ? (
-          <div style={{ padding: '24px' }}>
+          <div style={{ padding: "24px" }}>
             <Skeleton active paragraph={{ rows: 8 }} />
           </div>
         ) : filteredData.length === 0 ? (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
             description="Không có dữ liệu khách hàng"
-            style={{ padding: '60px 24px' }}
+            style={{ padding: "60px 24px" }}
           >
             <Button type="primary" icon={<PlusOutlined />} onClick={onAdd}>
               Thêm khách hàng đầu tiên
@@ -414,9 +428,9 @@ export default function ImprovedCustomerManagement() {
             loading={loading}
             pagination={false}
             size="middle"
-            style={{ borderRadius: '12px' }}
-            rowClassName={(record, index) => 
-              index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
+            style={{ borderRadius: "12px" }}
+            rowClassName={(record, index) =>
+              index % 2 === 0 ? "table-row-light" : "table-row-dark"
             }
             scroll={{ x: 800 }}
           />
@@ -426,17 +440,18 @@ export default function ImprovedCustomerManagement() {
         {filteredData.length > 0 && (
           <div
             style={{
-              padding: '16px 24px',
-              borderTop: '1px solid #f0f0f0',
-              background: '#fafafa',
-              borderRadius: '0 0 12px 12px'
+              padding: "16px 24px",
+              borderTop: "1px solid #f0f0f0",
+              background: "#fafafa",
+              borderRadius: "0 0 12px 12px",
             }}
           >
             <Row justify="space-between" align="middle">
               <Col>
                 <Text type="secondary">
-                  Hiển thị {((pageNumber - 1) * PAGE_SIZE) + 1} - {Math.min(pageNumber * PAGE_SIZE, total)} 
-                  {' '}trong tổng số {total} khách hàng
+                  Hiển thị {(pageNumber - 1) * PAGE_SIZE + 1} -{" "}
+                  {Math.min(pageNumber * PAGE_SIZE, total)} trong tổng số{" "}
+                  {total} khách hàng
                 </Text>
               </Col>
               <Col>
@@ -458,19 +473,25 @@ export default function ImprovedCustomerManagement() {
       {/* Enhanced Modal */}
       <Modal
         title={
-          <div style={{ 
-            textAlign: 'center', 
-            paddingBottom: '16px',
-            borderBottom: '1px solid #f0f0f0',
-            marginBottom: '24px'
-          }}>
-            <UserAddOutlined style={{ 
-              fontSize: '24px', 
-              color: '#1890ff', 
-              marginRight: '8px' 
-            }} />
-            <span style={{ fontSize: '18px', fontWeight: 600 }}>
-              {editingId ? "Chỉnh sửa thông tin khách hàng" : "Thêm khách hàng mới"}
+          <div
+            style={{
+              textAlign: "center",
+              paddingBottom: "16px",
+              borderBottom: "1px solid #f0f0f0",
+              marginBottom: "24px",
+            }}
+          >
+            <UserAddOutlined
+              style={{
+                fontSize: "24px",
+                color: "#1890ff",
+                marginRight: "8px",
+              }}
+            />
+            <span style={{ fontSize: "18px", fontWeight: 600 }}>
+              {editingId
+                ? "Chỉnh sửa thông tin khách hàng"
+                : "Thêm khách hàng mới"}
             </span>
           </div>
         }
@@ -480,14 +501,14 @@ export default function ImprovedCustomerManagement() {
         destroyOnClose
         centered
         width={600}
-        style={{ borderRadius: '12px' }}
+        style={{ borderRadius: "12px" }}
       >
         <Form
           form={form}
           layout="vertical"
           onFinish={onFinish}
           initialValues={{ hide: true, sapXep: 0, dataBegin: dayjs() }}
-          style={{ maxWidth: '100%' }}
+          style={{ maxWidth: "100%" }}
         >
           <Row gutter={16}>
             <Col span={24}>
@@ -501,10 +522,10 @@ export default function ImprovedCustomerManagement() {
                 name="hoTen"
                 rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
               >
-                <Input 
-                  placeholder="Nhập họ và tên khách hàng" 
+                <Input
+                  placeholder="Nhập họ và tên khách hàng"
                   size="large"
-                  style={{ borderRadius: '8px' }}
+                  style={{ borderRadius: "8px" }}
                 />
               </Form.Item>
             </Col>
@@ -522,13 +543,16 @@ export default function ImprovedCustomerManagement() {
                 name="sdt"
                 rules={[
                   { required: true, message: "Vui lòng nhập số điện thoại" },
-                  { pattern: /^[0-9]{10,11}$/, message: "Số điện thoại không hợp lệ" }
+                  {
+                    pattern: /^[0-9]{10,11}$/,
+                    message: "Số điện thoại không hợp lệ",
+                  },
                 ]}
               >
-                <Input 
-                  placeholder="Nhập số điện thoại" 
+                <Input
+                  placeholder="Nhập số điện thoại"
                   size="large"
-                  style={{ borderRadius: '8px' }}
+                  style={{ borderRadius: "8px" }}
                 />
               </Form.Item>
             </Col>
@@ -543,13 +567,13 @@ export default function ImprovedCustomerManagement() {
                 name="cccd"
                 rules={[
                   { required: true, message: "Vui lòng nhập số CCCD" },
-                  { pattern: /^[0-9]{9,12}$/, message: "CCCD không hợp lệ" }
+                  { pattern: /^[0-9]{9,12}$/, message: "CCCD không hợp lệ" },
                 ]}
               >
-                <Input 
+                <Input
                   placeholder="Nhập số CCCD"
                   size="large"
-                  style={{ borderRadius: '8px' }}
+                  style={{ borderRadius: "8px" }}
                 />
               </Form.Item>
             </Col>
@@ -570,10 +594,10 @@ export default function ImprovedCustomerManagement() {
                   { required: true, message: "Vui lòng nhập email" },
                 ]}
               >
-                <Input 
-                  placeholder="Nhập địa chỉ email" 
+                <Input
+                  placeholder="Nhập địa chỉ email"
                   size="large"
-                  style={{ borderRadius: '8px' }}
+                  style={{ borderRadius: "8px" }}
                 />
               </Form.Item>
             </Col>
@@ -584,13 +608,15 @@ export default function ImprovedCustomerManagement() {
               <Form.Item
                 label="Mật khẩu"
                 name="matKhau"
-                rules={[{ required: !editingId, message: "Vui lòng nhập mật khẩu" }]}
+                rules={[
+                  { required: !editingId, message: "Vui lòng nhập mật khẩu" },
+                ]}
                 hasFeedback
               >
-                <Input.Password 
-                  placeholder="Nhập mật khẩu" 
+                <Input.Password
+                  placeholder="Nhập mật khẩu"
                   size="large"
-                  style={{ borderRadius: '8px' }}
+                  style={{ borderRadius: "8px" }}
                 />
               </Form.Item>
             </Col>
@@ -606,41 +632,43 @@ export default function ImprovedCustomerManagement() {
                 rules={[{ required: true, message: "Vui lòng chọn ngày" }]}
               >
                 <DatePicker
-                  style={{ width: "100%", borderRadius: '8px' }}
+                  style={{ width: "100%", borderRadius: "8px" }}
                   size="large"
                   format="DD/MM/YYYY"
-                  disabledDate={(current) => current && current > dayjs().endOf("day")}
+                  disabledDate={(current) =>
+                    current && current > dayjs().endOf("day")
+                  }
                   placeholder="Chọn ngày đăng ký"
                 />
               </Form.Item>
             </Col>
           </Row>
 
-          <Divider style={{ margin: '24px 0' }} />
+          <Divider style={{ margin: "24px 0" }} />
 
-          <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
+          <Form.Item style={{ marginBottom: 0, textAlign: "right" }}>
             <Space size="middle">
               <Button
                 size="large"
                 onClick={() => setModalOpen(false)}
                 disabled={posting}
-                style={{ 
-                  borderRadius: '8px',
-                  minWidth: '100px'
+                style={{
+                  borderRadius: "8px",
+                  minWidth: "100px",
                 }}
               >
                 Hủy
               </Button>
-              <Button 
-                type="primary" 
-                htmlType="submit" 
+              <Button
+                type="primary"
+                htmlType="submit"
                 loading={posting}
                 size="large"
-                style={{ 
-                  borderRadius: '8px',
-                  minWidth: '120px',
-                  background: editingId ? '#52c41a' : '#1890ff',
-                  borderColor: editingId ? '#52c41a' : '#1890ff'
+                style={{
+                  borderRadius: "8px",
+                  minWidth: "120px",
+                  background: editingId ? "#52c41a" : "#1890ff",
+                  borderColor: editingId ? "#52c41a" : "#1890ff",
                 }}
               >
                 {editingId ? "Cập nhật" : "Thêm mới"}
@@ -715,7 +743,7 @@ export default function ImprovedCustomerManagement() {
           transition: all 0.3s ease;
         }
         .ant-card:hover {
-          box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
         }
       `}</style>
     </div>

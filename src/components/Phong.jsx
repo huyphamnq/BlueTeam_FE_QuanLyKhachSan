@@ -1,19 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
-  Card, Col, Row, Button, Modal, Form, Input, InputNumber,
-  message, Popconfirm, Pagination, Upload, Select, Tag, Spin
-} from 'antd';
-import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
-import axios from 'axios';
+  Card,
+  Col,
+  Row,
+  Button,
+  Modal,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Popconfirm,
+  Pagination,
+  Upload,
+  Select,
+  Tag,
+  Spin,
+} from "antd";
+import { UploadOutlined, PlusOutlined } from "@ant-design/icons";
+import axios from "axios";
 
-const API_URL = 'https://quanlykhachsan-ozv3.onrender.com/api/Phong';
+const API_URL = "https://quanlykhachsan-ozv3.onrender.com/api/Phong";
 
 const getTrangThaiText = (value) => {
   switch (value) {
-    case 1: return <Tag color="green">Trống</Tag>;
-    case 2: return <Tag color="red">Đã đặt</Tag>;
-    case 3: return <Tag color="orange">Bảo trì</Tag>;
-    default: return <Tag>Mặc định</Tag>;
+    case 1:
+      return <Tag color="green">Trống</Tag>;
+    case 2:
+      return <Tag color="red">Đã đặt</Tag>;
+    case 3:
+      return <Tag color="orange">Bảo trì</Tag>;
+    default:
+      return <Tag>Mặc định</Tag>;
   }
 };
 
@@ -25,8 +42,12 @@ const Phong = () => {
   const [editingPhong, setEditingPhong] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
-  const [pagination, setPagination] = useState({ page: 1, pageSize: 6, total: 0 });
-  const [search, setSearch] = useState('');
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pageSize: 6,
+    total: 0,
+  });
+  const [search, setSearch] = useState("");
   const [imageFile, setImageFile] = useState(null);
 
   // Lấy danh sách phòng (có phân trang, tìm kiếm)
@@ -41,9 +62,9 @@ const Phong = () => {
         },
       });
       setPhongs(res.data.items || []);
-      setPagination(prev => ({ ...prev, total: res.data.totalRecords }));
+      setPagination((prev) => ({ ...prev, total: res.data.totalRecords }));
     } catch (error) {
-      message.error('Lỗi khi tải danh sách phòng!');
+      message.error("Lỗi khi tải danh sách phòng!");
     }
     setLoading(false);
   };
@@ -63,12 +84,14 @@ const Phong = () => {
         form.setFieldsValue({
           ...phong,
           hide: phong.hide || false,
-          dateBegin: phong.dateBegin ? phong.dateBegin.split('T')[0] : new Date().toISOString().slice(0, 10),
+          dateBegin: phong.dateBegin
+            ? phong.dateBegin.split("T")[0]
+            : new Date().toISOString().slice(0, 10),
         });
         setEditingPhong(phong);
         setIsEdit(false);
       } catch (error) {
-        message.error('Lỗi khi tải chi tiết phòng');
+        message.error("Lỗi khi tải chi tiết phòng");
         setIsModalOpen(false);
       }
     } else {
@@ -97,11 +120,11 @@ const Phong = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${API_URL}/${id}`);
-      message.success('Xoá thành công');
+      message.success("Xoá thành công");
       fetchPhongs();
       closeModal();
     } catch {
-      message.error('Lỗi khi xoá phòng');
+      message.error("Lỗi khi xoá phòng");
     }
   };
 
@@ -111,7 +134,7 @@ const Phong = () => {
       const dataToSend = {
         ...values,
         hide: values.hide || false,
-        meta: values.meta || '',
+        meta: values.meta || "",
         thuTuSapXep: values.thuTuSapXep || 0,
         dateBegin: values.dateBegin || new Date().toISOString(),
         idLoaiPhong: values.idLoaiPhong || 1,
@@ -131,16 +154,19 @@ const Phong = () => {
 
       if (imageFile) {
         const formData = new FormData();
-        formData.append('image', imageFile);
+        formData.append("image", imageFile);
         await axios.post(`${API_URL}/${phongId}/upload-image`, formData);
       }
 
-      message.success(editingPhong ? 'Cập nhật thành công' : 'Thêm thành công');
+      message.success(editingPhong ? "Cập nhật thành công" : "Thêm thành công");
       fetchPhongs();
       closeModal();
     } catch (error) {
-      console.error('Lỗi khi lưu phòng:', error.response?.data || error.message);
-      message.error('Lỗi khi lưu phòng');
+      console.error(
+        "Lỗi khi lưu phòng:",
+        error.response?.data || error.message
+      );
+      message.error("Lỗi khi lưu phòng");
     }
   };
 
@@ -156,78 +182,101 @@ const Phong = () => {
 
   return (
     <div style={{ padding: 0 }}>
-      <Row justify="space-between" style={{ marginBottom: 30, gap: 16}}>
-        <Col flex ="auto">
+      <Row justify="space-between" style={{ marginBottom: 30, gap: 16 }}>
+        <Col flex="auto">
           <Input.Search
             size="large"
             placeholder="Tìm kiếm theo tên phòng..."
-            onSearch={val => setSearch(val)}
+            onSearch={(val) => setSearch(val)}
             allowClear
             enterButton
           />
         </Col>
         <Col>
-          <Button 
-              type="primary" 
-              size="large" 
-              icon={<PlusOutlined />} 
-              onClick={handleAdd}>Thêm phòng
+          <Button
+            type="primary"
+            size="large"
+            icon={<PlusOutlined />}
+            onClick={handleAdd}
+          >
+            Thêm phòng
           </Button>
         </Col>
       </Row>
 
       <Spin spinning={loading}>
         <Row gutter={[16, 16]}>
-          {phongs.map(phong => (
+          {phongs.map((phong) => (
             <Col key={phong.idPhong} span={8}>
               <Card
-                  hoverable
-                  onClick={() => handleCardClick(phong)}
-                  cover={
-                    <div style={{ position: 'relative', overflow: 'hidden'}}>
-                      <img
-                        alt="Hình ảnh phòng"
-                        src={phong.hinhAnh ? `https://quanlykhachsan-ozv3.onrender.com${phong.hinhAnh}` : ''}
-                        style={{ height: 200, objectFit: 'cover', width: '100%'}}
-                      />
-                      <div style={{ position: 'absolute', top: 8, right: 8 }}>
-                        {getTrangThaiText(phong.trangThai)}
-                      </div>
+                hoverable
+                onClick={() => handleCardClick(phong)}
+                cover={
+                  <div style={{ position: "relative", overflow: "hidden" }}>
+                    <img
+                      alt="Hình ảnh phòng"
+                      src={
+                        phong.hinhAnh
+                          ? `https://quanlykhachsan-ozv3.onrender.com${phong.hinhAnh}`
+                          : ""
+                      }
+                      style={{ height: 200, objectFit: "cover", width: "100%" }}
+                    />
+                    <div style={{ position: "absolute", top: 8, right: 8 }}>
+                      {getTrangThaiText(phong.trangThai)}
                     </div>
-                  }
-                >
-                  <h3 style={{ marginBottom: 8, fontWeight: 700 }}>{phong.tenPhong}</h3>
+                  </div>
+                }
+              >
+                <h3 style={{ marginBottom: 8, fontWeight: 700 }}>
+                  {phong.tenPhong}
+                </h3>
 
-                  <div style={{ marginTop: 8 }}>
-                    {phong.giamGia > 0 ? (
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-                        <span style={{ color: '#888', textDecoration: 'line-through' }}>
-                          {phong.giaPhong?.toLocaleString() || 0} VND
-                        </span>
-                        <span style={{ color: '#cf1322', fontWeight: 'bold' }}>
-                          {(phong.giaPhong - phong.giamGia)?.toLocaleString() || 0} VND
-                        </span>
-                      </div>
-                    ) : (
-                      <span style={{ fontWeight: 'bold' }}>
+                <div style={{ marginTop: 8 }}>
+                  {phong.giamGia > 0 ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: 8,
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "#888",
+                          textDecoration: "line-through",
+                        }}
+                      >
                         {phong.giaPhong?.toLocaleString() || 0} VND
                       </span>
-                    )}
-                  </div>
+                      <span style={{ color: "#cf1322", fontWeight: "bold" }}>
+                        {(phong.giaPhong - phong.giamGia)?.toLocaleString() ||
+                          0}{" "}
+                        VND
+                      </span>
+                    </div>
+                  ) : (
+                    <span style={{ fontWeight: "bold" }}>
+                      {phong.giaPhong?.toLocaleString() || 0} VND
+                    </span>
+                  )}
+                </div>
 
-                  <div style={{
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    display: '-webkit-box',
+                <div
+                  style={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "-webkit-box",
                     WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical',
+                    WebkitBoxOrient: "vertical",
                     marginTop: 8,
-                    textAlign: 'justify'
-                  }}>
-                    {phong.moTa}
-                  </div>
-                </Card>
-
+                    textAlign: "justify",
+                  }}
+                >
+                  {phong.moTa}
+                </div>
+              </Card>
             </Col>
           ))}
         </Row>
@@ -237,12 +286,23 @@ const Phong = () => {
         current={pagination.page}
         pageSize={pagination.pageSize}
         total={pagination.total}
-        onChange={(page) => setPagination(prev => ({ ...prev, page }))}
-        style={{ marginTop: 30, textAlign: 'center', display: 'flex', justifyContent: 'center' }}
+        onChange={(page) => setPagination((prev) => ({ ...prev, page }))}
+        style={{
+          marginTop: 30,
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+        }}
       />
 
       <Modal
-        title={editingPhong ? (isEdit ? 'Chỉnh sửa phòng' : 'Chi tiết phòng') : 'Thêm phòng'}
+        title={
+          editingPhong
+            ? isEdit
+              ? "Chỉnh sửa phòng"
+              : "Chi tiết phòng"
+            : "Thêm phòng"
+        }
         open={isModalOpen}
         onCancel={closeModal}
         footer={null}
@@ -253,15 +313,19 @@ const Phong = () => {
             <Row gutter={24}>
               <Col span={10}>
                 <img
-                  src={editingPhong.hinhAnh ? `https://quanlykhachsan-ozv3.onrender.com${editingPhong.hinhAnh}` : ''}
+                  src={
+                    editingPhong.hinhAnh
+                      ? `https://quanlykhachsan-ozv3.onrender.com${editingPhong.hinhAnh}`
+                      : ""
+                  }
                   alt="Ảnh phòng"
                   style={{
-                    width: '100%',
+                    width: "100%",
                     borderRadius: 8,
                     maxHeight: 300,
-                    height: '100%',
-                    objectFit: 'cover',
-                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+                    height: "100%",
+                    objectFit: "cover",
+                    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
                   }}
                 />
               </Col>
@@ -270,27 +334,60 @@ const Phong = () => {
 
                 <Row gutter={[16, 16]}>
                   <Col span={12}>
-                    <p><strong>Trạng thái:</strong> {getTrangThaiText(editingPhong.trangThai)}</p>
+                    <p>
+                      <strong>Trạng thái:</strong>{" "}
+                      {getTrangThaiText(editingPhong.trangThai)}
+                    </p>
                   </Col>
                   <Col span={12}>
-                    <p><strong>Diện tích:</strong> {editingPhong.dienTich} m²</p>
+                    <p>
+                      <strong>Diện tích:</strong> {editingPhong.dienTich} m²
+                    </p>
                   </Col>
                   <Col span={12}>
-                    <p><strong>Giá phòng:</strong> {editingPhong.giaPhong?.toLocaleString() || 0} VND</p>
+                    <p>
+                      <strong>Giá phòng:</strong>{" "}
+                      {editingPhong.giaPhong?.toLocaleString() || 0} VND
+                    </p>
                   </Col>
                   <Col span={12}>
-                    <p><strong>Giảm giá:</strong> {editingPhong.giaPhong ? ((editingPhong.giamGia / editingPhong.giaPhong) * 100).toFixed(0) : 0}%</p>
+                    <p>
+                      <strong>Giảm giá:</strong>{" "}
+                      {editingPhong.giaPhong
+                        ? (
+                            (editingPhong.giamGia / editingPhong.giaPhong) *
+                            100
+                          ).toFixed(0)
+                        : 0}
+                      %
+                    </p>
                   </Col>
                   <Col span={12}>
-                    <p><strong>Số người tối đa:</strong> {editingPhong.soNguoi}</p>
+                    <p>
+                      <strong>Số người tối đa:</strong> {editingPhong.soNguoi}
+                    </p>
                   </Col>
                   <Col span={24}>
-                    <p><strong>Mô tả:</strong> {editingPhong.moTa}</p>
+                    <p>
+                      <strong>Mô tả:</strong> {editingPhong.moTa}
+                    </p>
                   </Col>
                 </Row>
 
-                <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button style={{marginRight: 10}} type="primary" onClick={() => setIsEdit(true)}>Chỉnh sửa</Button>
+                <div
+                  style={{
+                    marginTop: 24,
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <Button
+                    style={{ marginRight: 10 }}
+                    type="primary"
+                    onClick={() => setIsEdit(true)}
+                  >
+                    Chỉnh sửa
+                  </Button>
 
                   <Popconfirm
                     title="Bạn có chắc muốn xoá phòng này?"
@@ -322,7 +419,9 @@ const Phong = () => {
                   <Form.Item
                     name="tenPhong"
                     label="Tên phòng"
-                    rules={[{ required: true, message: 'Vui lòng nhập tên phòng' }]}
+                    rules={[
+                      { required: true, message: "Vui lòng nhập tên phòng" },
+                    ]}
                   >
                     <Input />
                   </Form.Item>
@@ -330,7 +429,9 @@ const Phong = () => {
                   <Form.Item
                     name="idLoaiPhong"
                     label="Loại phòng"
-                    rules={[{ required: true, message: 'Vui lòng chọn loại phòng' }]}
+                    rules={[
+                      { required: true, message: "Vui lòng chọn loại phòng" },
+                    ]}
                   >
                     <Select>
                       <Select.Option value={1}>Phòng đơn</Select.Option>
@@ -342,25 +443,31 @@ const Phong = () => {
                   <Form.Item
                     name="giaPhong"
                     label="Giá phòng (VND)"
-                    rules={[{ required: true, message: 'Vui lòng nhập giá phòng' }]}
+                    rules={[
+                      { required: true, message: "Vui lòng nhập giá phòng" },
+                    ]}
                   >
-                    <InputNumber style={{ width: '100%' }} min={0} />
+                    <InputNumber style={{ width: "100%" }} min={0} />
                   </Form.Item>
 
                   <Form.Item
                     name="giamGia"
                     label="Giảm giá (VND)"
-                    rules={[{ required: true, message: 'Vui lòng nhập giảm giá' }]}
+                    rules={[
+                      { required: true, message: "Vui lòng nhập giảm giá" },
+                    ]}
                   >
-                    <InputNumber style={{ width: '100%' }} min={0} />
+                    <InputNumber style={{ width: "100%" }} min={0} />
                   </Form.Item>
 
                   <Form.Item
                     name="dienTich"
                     label="Diện tích (m²)"
-                    rules={[{ required: true, message: 'Vui lòng nhập diện tích' }]}
+                    rules={[
+                      { required: true, message: "Vui lòng nhập diện tích" },
+                    ]}
                   >
-                    <InputNumber style={{ width: '100%' }} min={0} />
+                    <InputNumber style={{ width: "100%" }} min={0} />
                   </Form.Item>
                 </Col>
 
@@ -368,15 +475,22 @@ const Phong = () => {
                   <Form.Item
                     name="soNguoi"
                     label="Số người tối đa"
-                    rules={[{ required: true, message: 'Vui lòng nhập số người tối đa' }]}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng nhập số người tối đa",
+                      },
+                    ]}
                   >
-                    <InputNumber style={{ width: '100%' }} min={1} />
+                    <InputNumber style={{ width: "100%" }} min={1} />
                   </Form.Item>
 
                   <Form.Item
                     name="trangThai"
                     label="Trạng thái"
-                    rules={[{ required: true, message: 'Vui lòng chọn trạng thái' }]}
+                    rules={[
+                      { required: true, message: "Vui lòng chọn trạng thái" },
+                    ]}
                   >
                     <Select>
                       <Select.Option value={1}>Trống</Select.Option>
@@ -385,19 +499,13 @@ const Phong = () => {
                     </Select>
                   </Form.Item>
 
-                  <Form.Item
-                    name="moTa"
-                    label="Mô tả"
-                  >
+                  <Form.Item name="moTa" label="Mô tả">
                     <Input.TextArea rows={5} />
                   </Form.Item>
 
-                  <Form.Item
-                    name="image"
-                    label="Ảnh phòng"
-                  >
+                  <Form.Item name="image" label="Ảnh phòng">
                     <Upload
-                      beforeUpload={file => {
+                      beforeUpload={(file) => {
                         setImageFile(file);
                         return false; // không tự động upload
                       }}
@@ -410,19 +518,24 @@ const Phong = () => {
                 </Col>
               </Row>
 
-              <Form.Item style={{ textAlign: 'right' }}>
-                <Button onClick={() => {
-                  if (editingPhong) {
-                    setIsEdit(false);
-                    form.setFieldsValue(editingPhong);
-                    setImageFile(null);
-                  } else {
-                    closeModal();
-                  }
-                }} style={{ marginRight: 8 }}>
+              <Form.Item style={{ textAlign: "right" }}>
+                <Button
+                  onClick={() => {
+                    if (editingPhong) {
+                      setIsEdit(false);
+                      form.setFieldsValue(editingPhong);
+                      setImageFile(null);
+                    } else {
+                      closeModal();
+                    }
+                  }}
+                  style={{ marginRight: 8 }}
+                >
                   Huỷ
                 </Button>
-                <Button type="primary" htmlType="submit">Lưu</Button>
+                <Button type="primary" htmlType="submit">
+                  Lưu
+                </Button>
               </Form.Item>
             </Form>
           )}

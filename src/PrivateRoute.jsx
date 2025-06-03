@@ -1,8 +1,8 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React from "react";
+import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({ element }) => {
-  const token = localStorage.getItem('token');  // Kiểm tra token trong localStorage
+  const token = localStorage.getItem("token"); // Kiểm tra token trong localStorage
 
   if (!token) {
     // Nếu không có token, chuyển hướng về trang đăng nhập
