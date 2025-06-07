@@ -7,17 +7,14 @@ import {
   Button,
   Modal,
   Form,
-  Switch,
   message,
   DatePicker,
   Popconfirm,
   Space,
   Tooltip,
-  InputNumber,
   Card,
   Row,
   Col,
-  Tag,
   Avatar,
   Divider,
   Badge,
@@ -36,6 +33,8 @@ import {
   PlusOutlined,
   SearchOutlined,
   TeamOutlined,
+  InfoCircleOutlined,
+  ReloadOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -55,6 +54,9 @@ export default function NhanVienManagement() {
   const [form] = Form.useForm();
   const [posting, setPosting] = useState(false);
   const [editingId, setEditingId] = useState(null);
+
+  // Modal chi tiết
+  const [detailModal, setDetailModal] = useState({ open: false, record: null });
 
   const fetchData = async (page) => {
     setLoading(true);
@@ -79,18 +81,45 @@ export default function NhanVienManagement() {
   };
 
   useEffect(() => {
-    fetchData(pageNumber);
+    if (!searchText) {
+      fetchData(pageNumber);
+    }
+    // eslint-disable-next-line
   }, [pageNumber]);
 
-  const filteredData = useMemo(() => {
-    if (!searchText) return data;
-    return data.filter((item) =>
-      item.hoTen.toLowerCase().includes(searchText.toLowerCase())
-    );
-  }, [data, searchText]);
+  // Tìm kiếm đa trường
+  const filteredData = useMemo(() => data, [data]);
+
+  const searchNhanVien = async (keyword) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        "https://quanlykhachsan-ozv3.onrender.com/api/NhanVien/search",
+        { params: { keyword } }
+      );
+      setData(res.data);
+      setTotal(res.data.length);
+      setPageNumber(1);
+    } catch (error) {
+      message.error("Tìm kiếm thất bại");
+    }
+    setLoading(false);
+  };
 
   const onSearch = (value) => {
-    setSearchText(value.trim());
+    const keyword = value.trim();
+    setSearchText(keyword);
+    if (keyword) {
+      searchNhanVien(keyword);
+    } else {
+      fetchData(1);
+    }
+  };
+
+  // Làm mới dữ liệu
+  const onRefresh = () => {
+    fetchData(pageNumber);
+    message.success("Đã làm mới dữ liệu");
   };
 
   const onAdd = () => {
@@ -170,6 +199,9 @@ export default function NhanVienManagement() {
       message.error("Xóa thất bại");
     }
   };
+
+  // Hiện modal chi tiết
+  const onShowDetail = (record) => setDetailModal({ open: true, record });
 
   const columns = [
     {
@@ -261,6 +293,20 @@ export default function NhanVienManagement() {
       width: 200,
     },
     {
+      title: "Chức vụ",
+      dataIndex: "idChucVu",
+      key: "idChucVu",
+      align: "center",
+      width: 120,
+      render: (id) => {
+        if (id === 1) return <span style={{ color: "#d4380d" }}>Quản lý</span>;
+        if (id === 2)
+          return <span style={{ color: "#1890ff" }}>Nhân viên</span>;
+        if (id === 3) return <span style={{ color: "#52c41a" }}>Lễ tân</span>;
+        return "";
+      },
+    },
+    {
       title: "Ngày bắt đầu",
       dataIndex: "dateBegin",
       key: "dateBegin",
@@ -274,6 +320,21 @@ export default function NhanVienManagement() {
       responsive: ["md"],
       align: "center",
       width: 140,
+    },
+    {
+      title: "Chi tiết",
+      key: "detail",
+      width: 80,
+      align: "center",
+      render: (_, record) => (
+        <Tooltip title="Xem chi tiết">
+          <Button
+            icon={<InfoCircleOutlined />}
+            type="text"
+            onClick={() => onShowDetail(record)}
+          />
+        </Tooltip>
+      ),
     },
     {
       title: "Thao tác",
@@ -348,9 +409,9 @@ export default function NhanVienManagement() {
         bodyStyle={{ padding: "24px" }}
       >
         <Row gutter={[16, 16]} align="middle">
-          <Col xs={24} sm={16} md={18}>
+          <Col xs={24} sm={12} md={12}>
             <Search
-              placeholder="Tìm kiếm theo tên nhân viên..."
+              placeholder="Tìm theo kiếm tên... "
               allowClear
               enterButton={<SearchOutlined />}
               size="large"
@@ -360,9 +421,25 @@ export default function NhanVienManagement() {
               }}
             />
           </Col>
-          <Col xs={24} sm={8} md={6}>
+
+          <Col xs={24} sm={8} md={4}>
             <Button
-              type="primary"
+              icon={<ReloadOutlined />}
+              onClick={onRefresh}
+              block
+              size="large"
+              style={{
+                borderRadius: "8px",
+                fontWeight: 600,
+                background: "#f5f5f5",
+                border: "none",
+              }}
+            >
+              Làm mới
+            </Button>
+          </Col>
+          <Col xs={24} sm={24} md={8}>
+            <Button
               icon={<PlusOutlined />}
               onClick={onAdd}
               size="large"
@@ -372,6 +449,7 @@ export default function NhanVienManagement() {
                 borderRadius: "8px",
                 fontWeight: 600,
                 background: "#1677ff",
+                color: "#fff",
                 border: "none",
                 boxShadow: "0 2px 6px rgba(82, 196, 26, 0.3)",
               }}
@@ -674,6 +752,54 @@ export default function NhanVienManagement() {
             </Space>
           </Form.Item>
         </Form>
+      </Modal>
+
+      {/* Modal chi tiết nhân viên */}
+      <Modal
+        open={detailModal.open}
+        onCancel={() => setDetailModal({ open: false, record: null })}
+        footer={null}
+        title={
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <InfoCircleOutlined style={{ color: "#1890ff", fontSize: 20 }} />
+            <span>Chi tiết nhân viên</span>
+          </div>
+        }
+        centered
+        width={420}
+      >
+        {detailModal.record && (
+          <div>
+            <div style={{ textAlign: "center", marginBottom: 16 }}>
+              <Avatar
+                size={64}
+                icon={<UserOutlined />}
+                style={{ backgroundColor: "#1890ff" }}
+              />
+              <div style={{ fontWeight: 600, fontSize: 18, marginTop: 8 }}>
+                {detailModal.record.hoTen}
+              </div>
+            </div>
+            <Divider />
+            <div style={{ marginBottom: 8 }}>
+              <PhoneOutlined style={{ marginRight: 8 }} />
+              <b>SĐT:</b> {detailModal.record.sdt}
+            </div>
+            <div style={{ marginBottom: 8 }}>
+              <MailOutlined style={{ marginRight: 8 }} />
+              <b>Email:</b> {detailModal.record.email}
+            </div>
+            <div style={{ marginBottom: 8 }}>
+              <IdcardOutlined style={{ marginRight: 8 }} />
+              <b>Địa chỉ:</b> {detailModal.record.diaChi}
+            </div>
+            <div style={{ marginBottom: 8 }}>
+              <CalendarOutlined style={{ marginRight: 8 }} />
+              <b>Ngày bắt đầu:</b>{" "}
+              {dayjs(detailModal.record.dateBegin).format("DD/MM/YYYY")}
+            </div>
+          </div>
+        )}
       </Modal>
 
       <style jsx>{`

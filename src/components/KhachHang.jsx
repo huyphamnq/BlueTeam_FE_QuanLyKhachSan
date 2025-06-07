@@ -37,6 +37,8 @@ import {
   FilterOutlined,
   ExportOutlined,
   UserAddOutlined,
+  ReloadOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -51,11 +53,18 @@ export default function ImprovedCustomerManagement() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
-
   const [modalOpen, setModalOpen] = useState(false);
   const [form] = Form.useForm();
   const [posting, setPosting] = useState(false);
   const [editingId, setEditingId] = useState(null);
+
+  // Advanced filter & detail modal
+  const [advancedFilter, setAdvancedFilter] = useState({
+    sdt: "",
+    email: "",
+    cccd: "",
+  });
+  const [detailModal, setDetailModal] = useState({ open: false, record: null });
 
   const fetchData = async (page) => {
     setLoading(true);
@@ -80,18 +89,56 @@ export default function ImprovedCustomerManagement() {
   };
 
   useEffect(() => {
-    fetchData(pageNumber);
+    if (!searchText) {
+      fetchData(pageNumber);
+    }
+    // eslint-disable-next-line
   }, [pageNumber]);
 
+  // Multi-field search & advanced filter
   const filteredData = useMemo(() => {
-    if (!searchText) return data;
-    return data.filter((item) =>
-      item.hoTen.toLowerCase().includes(searchText.toLowerCase())
-    );
-  }, [data, searchText]);
+    let result = data;
+    if (advancedFilter.sdt)
+      result = result.filter((item) =>
+        item.sdt?.includes(advancedFilter.sdt.trim())
+      );
+    if (advancedFilter.email)
+      result = result.filter((item) =>
+        item.email
+          ?.toLowerCase()
+          .includes(advancedFilter.email.trim().toLowerCase())
+      );
+    if (advancedFilter.cccd)
+      result = result.filter((item) =>
+        item.cccd?.includes(advancedFilter.cccd.trim())
+      );
+    return result;
+  }, [data, advancedFilter]);
+
+  const searchKhachHang = async (query) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        "https://quanlykhachsan-ozv3.onrender.com/api/KhachHang/search",
+        { params: { query } }
+      );
+      setData(res.data);
+      setTotal(res.data.length);
+      setPageNumber(1);
+    } catch (error) {
+      message.error("Tìm kiếm thất bại");
+    }
+    setLoading(false);
+  };
 
   const onSearch = (value) => {
-    setSearchText(value.trim());
+    const query = value.trim();
+    setSearchText(query);
+    if (query) {
+      searchKhachHang(query);
+    } else {
+      fetchData(1);
+    }
   };
 
   const onAdd = () => {
@@ -170,6 +217,17 @@ export default function ImprovedCustomerManagement() {
     } catch (error) {
       message.error("Xóa thất bại");
     }
+  };
+
+  // Refresh data
+  const onRefresh = () => {
+    fetchData(pageNumber);
+    message.success("Đã làm mới dữ liệu");
+  };
+
+  // Show detail modal
+  const onShowDetail = (record) => {
+    setDetailModal({ open: true, record });
   };
 
   const columns = [
@@ -281,6 +339,21 @@ export default function ImprovedCustomerManagement() {
       width: 140,
     },
     {
+      title: "Chi tiết",
+      key: "detail",
+      width: 80,
+      align: "center",
+      render: (_, record) => (
+        <Tooltip title="Xem chi tiết">
+          <Button
+            icon={<InfoCircleOutlined />}
+            type="text"
+            onClick={() => onShowDetail(record)}
+          />
+        </Tooltip>
+      ),
+    },
+    {
       title: "Thao tác",
       key: "actions",
       width: 120,
@@ -357,26 +430,32 @@ export default function ImprovedCustomerManagement() {
         bodyStyle={{ padding: "24px" }}
       >
         <Row gutter={[16, 16]} align="middle">
-          <Col xs={24} sm={16} md={18}>
+          <Col xs={24} sm={16} md={12}>
             <Search
-              placeholder="Tìm kiếm theo tên khách hàng..."
+              placeholder="Tìm kiếm tên, SĐT, email, CCCD..."
               allowClear
               enterButton={<SearchOutlined />}
               size="large"
               onSearch={onSearch}
-              style={{
-                "& .ant-input": {
-                  borderRadius: "8px 0 0 8px",
-                },
-                "& .ant-btn": {
-                  borderRadius: "0 8px 8px 0",
-                  background: "#1890ff",
-                  // borderColor: '#1890ff'
-                },
-              }}
             />
           </Col>
-          <Col xs={24} sm={8} md={6}>
+          <Col xs={24} sm={8} md={4}>
+            <Button
+              icon={<ReloadOutlined />}
+              onClick={onRefresh}
+              block
+              size="large"
+              style={{
+                borderRadius: "8px",
+                fontWeight: 600,
+                background: "#f5f5f5",
+                border: "none",
+              }}
+            >
+              Làm mới
+            </Button>
+          </Col>
+          <Col xs={24} sm={24} md={8}>
             <Button
               type="primary"
               icon={<PlusOutlined />}
@@ -676,6 +755,54 @@ export default function ImprovedCustomerManagement() {
             </Space>
           </Form.Item>
         </Form>
+      </Modal>
+
+      {/* Detail Modal */}
+      <Modal
+        open={detailModal.open}
+        onCancel={() => setDetailModal({ open: false, record: null })}
+        footer={null}
+        title={
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <InfoCircleOutlined style={{ color: "#1890ff", fontSize: 20 }} />
+            <span>Chi tiết khách hàng</span>
+          </div>
+        }
+        centered
+        width={420}
+      >
+        {detailModal.record && (
+          <div>
+            <div style={{ textAlign: "center", marginBottom: 16 }}>
+              <Avatar
+                size={64}
+                icon={<UserOutlined />}
+                style={{ backgroundColor: "#1890ff" }}
+              />
+              <div style={{ fontWeight: 600, fontSize: 18, marginTop: 8 }}>
+                {detailModal.record.hoTen}
+              </div>
+            </div>
+            <Divider />
+            <div style={{ marginBottom: 8 }}>
+              <PhoneOutlined style={{ marginRight: 8 }} />
+              <b>SĐT:</b> {detailModal.record.sdt}
+            </div>
+            <div style={{ marginBottom: 8 }}>
+              <MailOutlined style={{ marginRight: 8 }} />
+              <b>Email:</b> {detailModal.record.email}
+            </div>
+            <div style={{ marginBottom: 8 }}>
+              <IdcardOutlined style={{ marginRight: 8 }} />
+              <b>CCCD:</b> {detailModal.record.cccd}
+            </div>
+            <div style={{ marginBottom: 8 }}>
+              <CalendarOutlined style={{ marginRight: 8 }} />
+              <b>Ngày đăng ký:</b>{" "}
+              {dayjs(detailModal.record.dataBegin).format("DD/MM/YYYY")}
+            </div>
+          </div>
+        )}
       </Modal>
 
       <style jsx>{`
