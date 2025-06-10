@@ -57,6 +57,10 @@ const getStatusTag = (status) => {
 
 const DatPhong = () => {
   // State
+  const [detailModal, setDetailModal] = useState({
+    open: false,
+    booking: null,
+  });
   const [loading, setLoading] = useState(false);
   const [bookings, setBookings] = useState([]);
   const [filter, setFilter] = useState({
@@ -250,6 +254,12 @@ const DatPhong = () => {
       width: 220,
       render: (_, record) => (
         <Space>
+          <Button
+            size="small"
+            onClick={() => setDetailModal({ open: true, booking: record })}
+          >
+            Xem
+          </Button>
           <Button
             icon={<AiOutlineEdit />}
             size="small"
@@ -534,21 +544,31 @@ const DatPhong = () => {
     fetchRoomsByType(idLoaiPhong);
   };
 
-  // Render QR demo
-  const renderQR = () => (
-    <img
-      src="https://img.vietqr.io/image/970422-123456789-compact2.png?amount=3000000&addInfo=ThanhToanKhachSan"
-      alt="QR Thanh toán"
-      style={{
-        width: "100%",
-        maxWidth: "100%",
-        display: "block",
-        border: "1px solid #eee",
-        borderRadius: 8,
-        margin: "0 auto",
-      }}
-    />
-  );
+  // Render QR động với VietQR
+  const renderQR = () => {
+    if (!checkoutModal.booking) return null;
+    const bank = "970422";
+    const account = "123456789";
+    const amount = checkoutModal.booking.tongTien || 0;
+    const info = encodeURIComponent(
+      `ThanhToanKhachSan:${checkoutModal.booking.maNhanPhong || ""}`
+    );
+    const qrUrl = `https://img.vietqr.io/image/${bank}-${account}-compact2.png?amount=${amount}&addInfo=${info}`;
+    return (
+      <img
+        src={qrUrl}
+        alt="QR Thanh toán"
+        style={{
+          width: "100%",
+          maxWidth: "100%",
+          display: "block",
+          border: "1px solid #eee",
+          borderRadius: 8,
+          margin: "0 auto",
+        }}
+      />
+    );
+  };
 
   return (
     <div style={{ padding: 24 }}>
@@ -822,6 +842,64 @@ const DatPhong = () => {
             <Title level={5}>QR Thanh toán</Title>
             {renderQR()}
           </>
+        ) : (
+          <Spin />
+        )}
+      </Modal>
+      <Modal
+        open={detailModal.open}
+        title="Chi tiết Phiếu Đặt Phòng"
+        onCancel={() => setDetailModal({ open: false, booking: null })}
+        footer={[
+          <Button
+            key="close"
+            onClick={() => setDetailModal({ open: false, booking: null })}
+          >
+            Đóng
+          </Button>,
+        ]}
+        width={520}
+        destroyOnClose
+      >
+        {detailModal.booking ? (
+          <Descriptions bordered column={1} size="small">
+            <Descriptions.Item label="Mã nhận phòng">
+              {detailModal.booking.maNhanPhong}
+            </Descriptions.Item>
+            <Descriptions.Item label="Khách hàng">
+              {detailModal.booking.tenKhachHang}
+            </Descriptions.Item>
+            <Descriptions.Item label="Số điện thoại">
+              {detailModal.booking.sdt || "-"}
+            </Descriptions.Item>
+            <Descriptions.Item label="Email">
+              {detailModal.booking.email || "-"}
+            </Descriptions.Item>
+            <Descriptions.Item label="CCCD">
+              {detailModal.booking.cccd || "-"}
+            </Descriptions.Item>
+            <Descriptions.Item label="Số phòng">
+              {detailModal.booking.tenPhong}
+            </Descriptions.Item>
+            {/* <Descriptions.Item label="Loại phòng">
+              {detailModal.booking.tenLoaiPhong}
+            </Descriptions.Item> */}
+            <Descriptions.Item label="Ngày nhận">
+              {dayjs(detailModal.booking.ngayVao).format("HH:mm DD/MM/YYYY")}
+            </Descriptions.Item>
+            <Descriptions.Item label="Ngày trả">
+              {dayjs(detailModal.booking.ngayRa).format("HH:mm DD/MM/YYYY")}
+            </Descriptions.Item>
+            <Descriptions.Item label="Trạng thái">
+              {getStatusTag(detailModal.booking.tinhTrangDatPhong)}
+            </Descriptions.Item>
+            <Descriptions.Item label="Tổng tiền">
+              {detailModal.booking.tongTien?.toLocaleString()} đ
+            </Descriptions.Item>
+            <Descriptions.Item label="Ghi chú">
+              {detailModal.booking.meta || "-"}
+            </Descriptions.Item>
+          </Descriptions>
         ) : (
           <Spin />
         )}

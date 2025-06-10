@@ -12,6 +12,36 @@ import "../assets/css/base.css";
 
 const { Title } = Typography;
 
+const MostUsedRoomsChart = ({ data }) => (
+  <Card
+    title="Phòng được sử dụng nhiều nhất"
+    style={{ marginTop: 24, borderRadius: 12 }}
+  >
+    <Column
+      data={data}
+      xField="room"
+      yField="count"
+      height={220}
+      color="#1890ff"
+      autoFit
+      label={{
+        position: "middle",
+        style: { fill: "#fff", fontSize: 12 },
+      }}
+      tooltip={{
+        customContent: (title, items) => {
+          if (!items?.length || !items[0]?.data) return null;
+          const { room, count } = items[0].data;
+          return `<div>
+      <strong>Phòng: ${room ?? "Không xác định"}</strong><br/>
+      Số lượt sử dụng: ${count ?? 0}
+    </div>`;
+        },
+      }}
+    />
+  </Card>
+);
+
 const DashboardStatsCards = ({ stats, loading }) => (
   <Row gutter={[16, 16]}>
     <Col xs={12} md={6}>
@@ -118,10 +148,11 @@ const RoomUsagePie = ({ data, loading }) => (
         data={data}
         angleField="value"
         colorField="type"
-        radius={0.9}
+        radius={0.8}
+        height={220}
         label={{
-          type: "outer",
           content: (datum) => `${datum.type}: ${datum.value} phòng`,
+          style: { fontSize: 12 },
         }}
         legend={{ position: "bottom" }}
         autoFit
@@ -210,6 +241,7 @@ const BangDieuKhien = () => {
   const [bookingsLoading, setBookingsLoading] = useState(true);
   const [topServices, setTopServices] = useState([]);
   const [servicesLoading, setServicesLoading] = useState(true);
+  const [mostUsedRooms, setMostUsedRooms] = useState([]);
 
   useEffect(() => {
     setStatsLoading(true);
@@ -288,26 +320,33 @@ const BangDieuKhien = () => {
 
     setPieLoading(true);
     Promise.all([
-      fetch(
-        "https://quanlykhachsan-ozv3.onrender.com/api/Phong/filter?pageNumber=1&pageSize=1000"
-      ).then((res) => res.json()),
       fetch("https://quanlykhachsan-ozv3.onrender.com/api/LoaiPhong").then(
         (res) => res.json()
       ),
+      fetch(
+        "https://quanlykhachsan-ozv3.onrender.com/api/PhieuDatPhong?pageNumber=1&pageSize=1000"
+      ).then((res) => res.json()),
     ])
-      .then(([roomsData, typesData]) => {
-        const rooms = Array.isArray(roomsData)
-          ? roomsData
-          : roomsData.items || roomsData.data || [];
+      .then(([typesData, bookingsData]) => {
         const types = Array.isArray(typesData)
           ? typesData
           : typesData.items || typesData.data || [];
+        const bookings = Array.isArray(bookingsData)
+          ? bookingsData
+          : bookingsData.items || bookingsData.data || [];
+        const now = new Date();
+        // Lọc các booking đang hoạt động
+        const activeBookings = bookings.filter(
+          (b) =>
+            b.tinhTrangDatPhong === 2 ||
+            (b.tinhTrangDatPhong === 1 && new Date(b.ngayRa) > now)
+        );
+        // Đếm số booking theo loại phòng
         const pie = types
           .map((t) => ({
             type: t.tenLoaiPhong,
-            value: rooms.filter(
-              (r) => r.idLoaiPhong === t.idLoaiPhong && r.trangThai === 2
-            ).length,
+            value: activeBookings.filter((b) => b.idLoaiPhong === t.idLoaiPhong)
+              .length,
           }))
           .filter((item) => item.value > 0);
         setRoomPieData(pie);
@@ -383,6 +422,25 @@ const BangDieuKhien = () => {
         setServicesLoading(false);
         console.error("Error fetching top services:", err);
       });
+
+    // Thống kê phòng sử dụng nhiều nhất
+    fetch(
+      "https://quanlykhachsan-ozv3.onrender.com/api/PhieuDatPhong?pageNumber=1&pageSize=1000"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        const bookings = data.items || data.data || [];
+        const roomCount = {};
+        bookings.forEach((b) => {
+          if (!b.tenPhong) return;
+          roomCount[b.tenPhong] = (roomCount[b.tenPhong] || 0) + 1;
+        });
+        const sorted = Object.entries(roomCount)
+          .map(([room, count]) => ({ room, count }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 5); // Top 5 phòng
+        setMostUsedRooms(sorted);
+      });
   }, []);
 
   return (
@@ -395,8 +453,11 @@ const BangDieuKhien = () => {
         <Col xs={24} md={16}>
           <RevenueChart data={revenueData} loading={revenueLoading} />
         </Col>
+        {/* <Col xs={24} md={8}>
+          <RoomUsagePie data={roomPieData || []} loading={pieLoading} />
+        </Col> */}
         <Col xs={24} md={8}>
-          <RoomUsagePie data={roomPieData} loading={pieLoading} />
+          <MostUsedRoomsChart data={mostUsedRooms} />
         </Col>
       </Row>
       <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
@@ -405,9 +466,6 @@ const BangDieuKhien = () => {
             data={activeBookings}
             loading={bookingsLoading}
           />
-        </Col>
-        <Col xs={24} md={8}>
-          <TopServicesList data={topServices} loading={servicesLoading} />
         </Col>
       </Row>
     </div>

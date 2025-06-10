@@ -84,7 +84,7 @@ const fetchAllCustomers = async () => {
 // API lấy bookings (đã có sẵn thông tin phòng và khách hàng)
 const fetchBookings = async () => {
   const res = await fetch(
-    "http://192.168.1.146:10000/api/PhieuDatPhong?pageNumber=1&pageSize=100"
+    "https://quanlykhachsan-ozv3.onrender.com/api/PhieuDatPhong?pageNumber=1&pageSize=100"
   );
   if (!res.ok) throw new Error("Lỗi tải dữ liệu");
   const json = await res.json();
