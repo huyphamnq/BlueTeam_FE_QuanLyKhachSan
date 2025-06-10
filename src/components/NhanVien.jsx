@@ -57,6 +57,8 @@ export default function NhanVienManagement() {
   const [editingId, setEditingId] = useState(null);
   const [detailModal, setDetailModal] = useState({ open: false, record: null });
 
+  // const role = localStorage.getItem("role");
+
   const fetchData = async (page) => {
     setLoading(true);
     try {
@@ -116,6 +118,10 @@ export default function NhanVienManagement() {
   };
 
   const onAdd = () => {
+    // if (role !== "admin123") {
+    //   message.warning("Bạn không có quyền thực hiện chức năng này!");
+    //   return;
+    // }
     setEditingId(null);
     form.resetFields();
     form.setFieldsValue({
@@ -127,6 +133,10 @@ export default function NhanVienManagement() {
   };
 
   const onEdit = async (id) => {
+    // if (role !== "admin123") {
+    //   message.warning("Bạn không có quyền thực hiện chức năng này!");
+    //   return;
+    // }
     setPosting(true);
     try {
       const res = await axios.get(
@@ -178,6 +188,10 @@ export default function NhanVienManagement() {
   };
 
   const onDelete = async (id) => {
+    // if (role !== "admin123") {
+    //   message.warning("Bạn không có quyền thực hiện chức năng này!");
+    //   return;
+    // }
     try {
       await axios.delete(
         `https://quanlykhachsan-ozv3.onrender.com/api/NhanVien/${id}`

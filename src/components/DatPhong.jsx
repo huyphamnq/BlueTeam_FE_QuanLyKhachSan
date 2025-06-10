@@ -30,7 +30,6 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 dayjs.extend(isSameOrAfter);
 import "dayjs/locale/vi";
 import locale from "antd/es/date-picker/locale/vi_VN";
-// import "./DatPhong.css"; // Bạn có thể thêm css font Inter ở đây
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -305,18 +304,27 @@ const DatPhong = () => {
     setModal({ open: true, edit: null });
     form.resetFields();
   };
-  const openEditModal = (record) => {
+  const openEditModal = async (record) => {
+    let idLoaiPhong = record.idLoaiPhong;
+    if (!idLoaiPhong && record.idPhong) {
+      // Lấy idLoaiPhong từ phòng
+      const res = await fetch(
+        `https://quanlykhachsan-ozv3.onrender.com/api/Phong/${record.idPhong}`
+      );
+      const phong = await res.json();
+      idLoaiPhong = phong.idLoaiPhong;
+    }
     setModal({ open: true, edit: record });
+    await fetchRoomsByType(idLoaiPhong);
     form.setFieldsValue({
       ...record,
       ngayVao: dayjs(record.ngayVao),
       ngayRa: dayjs(record.ngayRa),
       idKhachHang: record.idKhachHang,
       idPhong: record.idPhong,
-      idLoaiPhong: record.idLoaiPhong,
+      idLoaiPhong: idLoaiPhong,
       meta: record.meta,
     });
-    fetchRoomsByType(record.idLoaiPhong);
   };
   const closeModal = () => {
     setModal({ open: false, edit: null });
@@ -327,24 +335,28 @@ const DatPhong = () => {
   const fetchRoomsByType = async (idLoaiPhong) => {
     if (!idLoaiPhong) {
       setRooms([]);
-      return;
+      return [];
     }
     const res = await fetch(
       `https://quanlykhachsan-ozv3.onrender.com/api/Phong/filter?idLoaiPhong=${idLoaiPhong}&pageNumber=1&pageSize=100`
     );
     const json = await res.json();
     setRooms(json.items || json.data || []);
+    return json.items || json.data || [];
   };
 
   // Validate phòng trống
-  const checkRoomAvailable = async (idPhong, ngayVao, ngayRa) => {
-    // Kiểm tra trùng với các booking đã có trong state
-    // Chỉ kiểm tra các booking chưa bị huỷ (tinhTrangDatPhong !== 4)
+  const checkRoomAvailable = async (
+    idPhong,
+    ngayVao,
+    ngayRa,
+    excludeId = null
+  ) => {
     return !bookings.some(
       (b) =>
         b.idPhong === idPhong &&
         b.tinhTrangDatPhong !== 4 &&
-        // Kiểm tra giao nhau khoảng thời gian
+        (excludeId ? b.idPhieuDatPhong !== excludeId : true) && // Loại bỏ booking hiện tại khi sửa
         dayjs(ngayVao).isBefore(dayjs(b.ngayRa)) &&
         dayjs(ngayRa).isAfter(dayjs(b.ngayVao))
     );
@@ -358,7 +370,8 @@ const DatPhong = () => {
       const available = await checkRoomAvailable(
         values.idPhong,
         values.ngayVao,
-        values.ngayRa
+        values.ngayRa,
+        modal.edit ? modal.edit.idPhieuDatPhong : null // Truyền id booking khi sửa
       );
       if (!available) {
         message.error("Phòng đã được đặt trong khoảng thời gian này!");
@@ -373,9 +386,9 @@ const DatPhong = () => {
         idPhong: values.idPhong,
         idNhanVien: values.idNhanVien,
         maNhanPhong: `MP${Math.floor(Math.random() * 100000)}`, // sinh mã nhận phòng tự động
-        ngayVao: values.ngayVao.toISOString(),
-        ngayRa: values.ngayRa.toISOString(),
-        ngayDatPhong: new Date().toISOString(),
+        ngayVao: values.ngayVao.format("YYYY-MM-DDTHH:mm:ss"),
+        ngayRa: values.ngayRa.format("YYYY-MM-DDTHH:mm:ss"),
+        ngayDatPhong: dayjs().format("YYYY-MM-DDTHH:mm:ss"),
         tinhTrangDatPhong: 1,
         tinhTrangThanhToan: 0,
         meta: values.meta || "",
@@ -404,6 +417,31 @@ const DatPhong = () => {
             body: JSON.stringify(payload),
           }
         );
+        // Cập nhật trạng thái phòng sang "Đã đặt" (1)
+        const resPhong = await fetch(
+          `https://quanlykhachsan-ozv3.onrender.com/api/Phong/${values.idPhong}`
+        );
+        const phong = await resPhong.json();
+        const phongUpdate = {
+          ...phong,
+          trangThai: 1,
+          loaiPhong: phong.loaiPhong || {
+            idLoaiPhong: phong.idLoaiPhong ?? 0,
+            tenLoaiPhong: "",
+            meta: "",
+            hide: false,
+            thuTuHienThi: 0,
+            dateBegin: new Date().toISOString(),
+          },
+        };
+        await fetch(
+          `https://quanlykhachsan-ozv3.onrender.com/api/Phong/${values.idPhong}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(phongUpdate),
+          }
+        );
         message.success("Tạo đặt phòng thành công!");
       }
       closeModal();
@@ -428,6 +466,30 @@ const DatPhong = () => {
           await fetch(
             `https://quanlykhachsan-ozv3.onrender.com/api/PhieuDatPhong/${record.idPhieuDatPhong}`,
             { method: "DELETE" }
+          );
+          const resPhong = await fetch(
+            `https://quanlykhachsan-ozv3.onrender.com/api/Phong/${record.idPhong}`
+          );
+          const phong = await resPhong.json();
+          const phongUpdate = {
+            ...phong,
+            trangThai: 0,
+            loaiPhong: phong.loaiPhong || {
+              idLoaiPhong: phong.idLoaiPhong ?? 0,
+              tenLoaiPhong: "",
+              meta: "",
+              hide: false,
+              thuTuHienThi: 0,
+              dateBegin: new Date().toISOString(),
+            },
+          };
+          await fetch(
+            `https://quanlykhachsan-ozv3.onrender.com/api/Phong/${record.idPhong}`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(phongUpdate),
+            }
           );
           message.success("Huỷ đặt phòng thành công!");
           fetchBookings();
@@ -465,6 +527,30 @@ const DatPhong = () => {
       );
       message.success("Check-in thành công!");
       fetchBookings();
+      const resPhong = await fetch(
+        `https://quanlykhachsan-ozv3.onrender.com/api/Phong/${record.idPhong}`
+      );
+      const phong = await resPhong.json();
+      const phongUpdate = {
+        ...phong,
+        trangThai: 2,
+        loaiPhong: phong.loaiPhong || {
+          idLoaiPhong: phong.idLoaiPhong ?? 0,
+          tenLoaiPhong: "",
+          meta: "",
+          hide: false,
+          thuTuHienThi: 0,
+          dateBegin: new Date().toISOString(),
+        },
+      };
+      await fetch(
+        `https://quanlykhachsan-ozv3.onrender.com/api/Phong/${record.idPhong}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(phongUpdate),
+        }
+      );
     } catch {
       message.error("Không thể check-in!");
     }
@@ -530,6 +616,30 @@ const DatPhong = () => {
         );
       }
       message.success("Check-out & thanh toán thành công!");
+      const resPhong = await fetch(
+        `https://quanlykhachsan-ozv3.onrender.com/api/Phong/${checkoutModal.booking.idPhong}`
+      );
+      const phong = await resPhong.json();
+      const phongUpdate = {
+        ...phong,
+        trangThai: 0,
+        loaiPhong: phong.loaiPhong || {
+          idLoaiPhong: phong.idLoaiPhong ?? 0,
+          tenLoaiPhong: "",
+          meta: "",
+          hide: false,
+          thuTuHienThi: 0,
+          dateBegin: new Date().toISOString(),
+        },
+      };
+      await fetch(
+        `https://quanlykhachsan-ozv3.onrender.com/api/Phong/${checkoutModal.booking.idPhong}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(phongUpdate),
+        }
+      );
       setCheckoutModal({ open: false, booking: null });
       fetchBookings();
     } catch {
