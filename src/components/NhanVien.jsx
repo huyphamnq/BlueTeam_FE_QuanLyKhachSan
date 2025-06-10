@@ -39,6 +39,8 @@ import {
 import axios from "axios";
 import dayjs from "dayjs";
 
+import "../assets/css/base.css";
+
 const { Title, Text } = Typography;
 const { Search } = Input;
 const PAGE_SIZE = 10;
@@ -49,13 +51,10 @@ export default function NhanVienManagement() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
-
   const [modalOpen, setModalOpen] = useState(false);
   const [form] = Form.useForm();
   const [posting, setPosting] = useState(false);
   const [editingId, setEditingId] = useState(null);
-
-  // Modal chi tiết
   const [detailModal, setDetailModal] = useState({ open: false, record: null });
 
   const fetchData = async (page) => {
@@ -63,9 +62,7 @@ export default function NhanVienManagement() {
     try {
       const res = await axios.get(
         "https://quanlykhachsan-ozv3.onrender.com/api/NhanVien",
-        {
-          params: { PageNumber: page, PageSize: PAGE_SIZE },
-        }
+        { params: { PageNumber: page, PageSize: PAGE_SIZE } }
       );
       const items = res.data.items;
       setData(items);
@@ -74,20 +71,17 @@ export default function NhanVienManagement() {
       } else {
         setTotal(page * PAGE_SIZE + 1);
       }
-    } catch (error) {
+    } catch {
       message.error("Lấy dữ liệu thất bại");
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    if (!searchText) {
-      fetchData(pageNumber);
-    }
+    if (!searchText) fetchData(pageNumber);
     // eslint-disable-next-line
   }, [pageNumber]);
 
-  // Tìm kiếm đa trường
   const filteredData = useMemo(() => data, [data]);
 
   const searchNhanVien = async (keyword) => {
@@ -100,7 +94,7 @@ export default function NhanVienManagement() {
       setData(res.data);
       setTotal(res.data.length);
       setPageNumber(1);
-    } catch (error) {
+    } catch {
       message.error("Tìm kiếm thất bại");
     }
     setLoading(false);
@@ -116,7 +110,6 @@ export default function NhanVienManagement() {
     }
   };
 
-  // Làm mới dữ liệu
   const onRefresh = () => {
     fetchData(pageNumber);
     message.success("Đã làm mới dữ liệu");
@@ -145,7 +138,7 @@ export default function NhanVienManagement() {
         dateBegin: dayjs(res.data.dateBegin),
       });
       setModalOpen(true);
-    } catch (error) {
+    } catch {
       message.error("Lấy dữ liệu nhân viên thất bại");
     }
     setPosting(false);
@@ -178,7 +171,7 @@ export default function NhanVienManagement() {
       setModalOpen(false);
       form.resetFields();
       fetchData(pageNumber);
-    } catch (error) {
+    } catch {
       message.error("Lưu thất bại");
     }
     setPosting(false);
@@ -195,12 +188,11 @@ export default function NhanVienManagement() {
       } else {
         fetchData(pageNumber);
       }
-    } catch (error) {
+    } catch {
       message.error("Xóa thất bại");
     }
   };
 
-  // Hiện modal chi tiết
   const onShowDetail = (record) => setDetailModal({ open: true, record });
 
   const columns = [
@@ -397,8 +389,17 @@ export default function NhanVienManagement() {
   ];
 
   return (
-    <div style={{ minHeight: "100vh" }}>
-      {/* Control Panel */}
+    <div style={{ minHeight: "100vh", padding: "24px" }}>
+      <Typography.Title
+        level={2}
+        style={{
+          marginBottom: 0,
+          fontWeight: 700,
+          letterSpacing: 1,
+        }}
+      >
+        Quản lý nhân viên
+      </Typography.Title>
       <Card
         style={{
           marginTop: 30,
@@ -406,7 +407,7 @@ export default function NhanVienManagement() {
           borderRadius: "12px",
           boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
         }}
-        bodyStyle={{ padding: "24px" }}
+        bodyStyle={{ padding: "0" }}
       >
         <Row gutter={[16, 16]} align="middle">
           <Col xs={24} sm={12} md={12}>
@@ -421,7 +422,6 @@ export default function NhanVienManagement() {
               }}
             />
           </Col>
-
           <Col xs={24} sm={8} md={4}>
             <Button
               icon={<ReloadOutlined />}
@@ -459,8 +459,6 @@ export default function NhanVienManagement() {
           </Col>
         </Row>
       </Card>
-
-      {/* Table Section */}
       <Card
         style={{
           borderRadius: "12px",
@@ -497,8 +495,6 @@ export default function NhanVienManagement() {
             scroll={{ x: 800 }}
           />
         )}
-
-        {/* Pagination */}
         {filteredData.length > 0 && (
           <div
             style={{
@@ -531,8 +527,6 @@ export default function NhanVienManagement() {
           </div>
         )}
       </Card>
-
-      {/* Modal Form */}
       <Modal
         title={
           <div
@@ -634,7 +628,6 @@ export default function NhanVienManagement() {
               </Form.Item>
             </Col>
           </Row>
-
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
@@ -658,7 +651,6 @@ export default function NhanVienManagement() {
               </Form.Item>
             </Col>
           </Row>
-
           <Row gutter={16}>
             <Col xs={24} sm={12}>
               <Form.Item
@@ -699,7 +691,6 @@ export default function NhanVienManagement() {
               </Form.Item>
             </Col>
           </Row>
-
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
@@ -719,9 +710,7 @@ export default function NhanVienManagement() {
               </Form.Item>
             </Col>
           </Row>
-
           <Divider style={{ margin: "24px 0" }} />
-
           <Form.Item style={{ marginBottom: 0, textAlign: "right" }}>
             <Space size="middle">
               <Button
@@ -753,8 +742,6 @@ export default function NhanVienManagement() {
           </Form.Item>
         </Form>
       </Modal>
-
-      {/* Modal chi tiết nhân viên */}
       <Modal
         open={detailModal.open}
         onCancel={() => setDetailModal({ open: false, record: null })}
@@ -801,7 +788,6 @@ export default function NhanVienManagement() {
           </div>
         )}
       </Modal>
-
       <style jsx>{`
         .table-row-light {
           background-color: #ffffff;

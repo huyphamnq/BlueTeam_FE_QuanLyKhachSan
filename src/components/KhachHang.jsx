@@ -7,13 +7,11 @@ import {
   Button,
   Modal,
   Form,
-  Switch,
   message,
   DatePicker,
   Popconfirm,
   Space,
   Tooltip,
-  InputNumber,
   Card,
   Row,
   Col,
@@ -34,8 +32,6 @@ import {
   CalendarOutlined,
   PlusOutlined,
   SearchOutlined,
-  FilterOutlined,
-  ExportOutlined,
   UserAddOutlined,
   ReloadOutlined,
   InfoCircleOutlined,
@@ -43,7 +39,9 @@ import {
 import axios from "axios";
 import dayjs from "dayjs";
 
-const { Title, Text } = Typography;
+import "../assets/css/base.css";
+
+const { Text } = Typography;
 const { Search } = Input;
 const PAGE_SIZE = 10;
 
@@ -57,8 +55,6 @@ export default function ImprovedCustomerManagement() {
   const [form] = Form.useForm();
   const [posting, setPosting] = useState(false);
   const [editingId, setEditingId] = useState(null);
-
-  // Advanced filter & detail modal
   const [advancedFilter, setAdvancedFilter] = useState({
     sdt: "",
     email: "",
@@ -71,9 +67,7 @@ export default function ImprovedCustomerManagement() {
     try {
       const res = await axios.get(
         "https://quanlykhachsan-ozv3.onrender.com/api/KhachHang",
-        {
-          params: { PageNumber: page, PageSize: PAGE_SIZE },
-        }
+        { params: { PageNumber: page, PageSize: PAGE_SIZE } }
       );
       const items = res.data.items;
       setData(items);
@@ -82,20 +76,17 @@ export default function ImprovedCustomerManagement() {
       } else {
         setTotal(page * PAGE_SIZE + 1);
       }
-    } catch (error) {
+    } catch {
       message.error("Lấy dữ liệu thất bại");
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    if (!searchText) {
-      fetchData(pageNumber);
-    }
+    if (!searchText) fetchData(pageNumber);
     // eslint-disable-next-line
   }, [pageNumber]);
 
-  // Multi-field search & advanced filter
   const filteredData = useMemo(() => {
     let result = data;
     if (advancedFilter.sdt)
@@ -125,7 +116,7 @@ export default function ImprovedCustomerManagement() {
       setData(res.data);
       setTotal(res.data.length);
       setPageNumber(1);
-    } catch (error) {
+    } catch {
       message.error("Tìm kiếm thất bại");
     }
     setLoading(false);
@@ -164,7 +155,7 @@ export default function ImprovedCustomerManagement() {
         dataBegin: dayjs(res.data.dataBegin),
       });
       setModalOpen(true);
-    } catch (error) {
+    } catch {
       message.error("Lấy dữ liệu khách hàng thất bại");
     }
     setPosting(false);
@@ -197,7 +188,7 @@ export default function ImprovedCustomerManagement() {
       setModalOpen(false);
       form.resetFields();
       fetchData(pageNumber);
-    } catch (error) {
+    } catch {
       message.error("Lưu thất bại");
     }
     setPosting(false);
@@ -214,21 +205,17 @@ export default function ImprovedCustomerManagement() {
       } else {
         fetchData(pageNumber);
       }
-    } catch (error) {
+    } catch {
       message.error("Xóa thất bại");
     }
   };
 
-  // Refresh data
   const onRefresh = () => {
     fetchData(pageNumber);
     message.success("Đã làm mới dữ liệu");
   };
 
-  // Show detail modal
-  const onShowDetail = (record) => {
-    setDetailModal({ open: true, record });
-  };
+  const onShowDetail = (record) => setDetailModal({ open: true, record });
 
   const columns = [
     {
@@ -414,12 +401,17 @@ export default function ImprovedCustomerManagement() {
   ];
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-      }}
-    >
-      {/* Control Panel */}
+    <div style={{ minHeight: "100vh", padding: "24px" }}>
+      <Typography.Title
+        level={2}
+        style={{
+          marginBottom: 0,
+          fontWeight: 700,
+          letterSpacing: 1,
+        }}
+      >
+        Quản lý khách hàng
+      </Typography.Title>
       <Card
         style={{
           marginTop: 30,
@@ -427,7 +419,7 @@ export default function ImprovedCustomerManagement() {
           borderRadius: "12px",
           boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
         }}
-        bodyStyle={{ padding: "24px" }}
+        bodyStyle={{ padding: "0" }}
       >
         <Row gutter={[16, 16]} align="middle">
           <Col xs={24} sm={16} md={12}>
@@ -476,8 +468,6 @@ export default function ImprovedCustomerManagement() {
           </Col>
         </Row>
       </Card>
-
-      {/* Table Section */}
       <Card
         style={{
           borderRadius: "12px",
@@ -514,8 +504,6 @@ export default function ImprovedCustomerManagement() {
             scroll={{ x: 800 }}
           />
         )}
-
-        {/* Custom Pagination */}
         {filteredData.length > 0 && (
           <div
             style={{
@@ -548,8 +536,6 @@ export default function ImprovedCustomerManagement() {
           </div>
         )}
       </Card>
-
-      {/* Enhanced Modal */}
       <Modal
         title={
           <div
@@ -609,7 +595,6 @@ export default function ImprovedCustomerManagement() {
               </Form.Item>
             </Col>
           </Row>
-
           <Row gutter={16}>
             <Col xs={24} sm={12}>
               <Form.Item
@@ -657,7 +642,6 @@ export default function ImprovedCustomerManagement() {
               </Form.Item>
             </Col>
           </Row>
-
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
@@ -681,7 +665,6 @@ export default function ImprovedCustomerManagement() {
               </Form.Item>
             </Col>
           </Row>
-
           <Row gutter={16}>
             <Col xs={24} sm={12}>
               <Form.Item
@@ -722,9 +705,7 @@ export default function ImprovedCustomerManagement() {
               </Form.Item>
             </Col>
           </Row>
-
           <Divider style={{ margin: "24px 0" }} />
-
           <Form.Item style={{ marginBottom: 0, textAlign: "right" }}>
             <Space size="middle">
               <Button
@@ -756,8 +737,6 @@ export default function ImprovedCustomerManagement() {
           </Form.Item>
         </Form>
       </Modal>
-
-      {/* Detail Modal */}
       <Modal
         open={detailModal.open}
         onCancel={() => setDetailModal({ open: false, record: null })}
@@ -804,7 +783,6 @@ export default function ImprovedCustomerManagement() {
           </div>
         )}
       </Modal>
-
       <style jsx>{`
         .table-row-light {
           background-color: #ffffff;

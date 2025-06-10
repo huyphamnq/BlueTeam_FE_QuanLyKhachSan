@@ -4,7 +4,9 @@
   box-sizing: inherit;
 }
 
-html {
+html,
+body,
+* {
   /* 100% = 16px */
   font-size: 62.5%;
   line-height: 1.6rem;
