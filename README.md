@@ -18,7 +18,7 @@ Dự án này là sản phẩm cho **đồ án cuối kỳ môn học** tại tr
 
 ## 🌐 Demo Online
 
-Truy cập: [https://blueteamflhu.io.vn/](https://blueteamflhu.io.vn/)
+Truy cập: [https://blueteamflhu.io.vn/](https://blueteamflhu.io.vn/) || [https://blue-team-fe-quan-ly-khach-san-ahh6.vercel.app/](https://blue-team-fe-quan-ly-khach-san-ahh6.vercel.app/)
 
 ---
 
