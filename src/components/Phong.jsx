@@ -932,13 +932,20 @@ const Phong = () => {
                                         <Badge
                                           color={TIMELINE_STATUS[b.status]}
                                           text={
-                                            b.status === "booked"
-                                              ? "Đã đặt"
-                                              : b.status === "staying"
-                                              ? "Đang ở"
-                                              : b.status === "done"
-                                              ? "Đã trả"
-                                              : "Đã huỷ"
+                                            <span
+                                              style={{
+                                                color: "#fff",
+                                                fontWeight: 500,
+                                              }}
+                                            >
+                                              {b.status === "booked"
+                                                ? "Đã đặt"
+                                                : b.status === "staying"
+                                                ? "Đang ở"
+                                                : b.status === "done"
+                                                ? "Đã trả"
+                                                : "Đã huỷ"}
+                                            </span>
                                           }
                                         />
                                       </div>
