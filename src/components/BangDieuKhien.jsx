@@ -385,6 +385,7 @@ const BangDieuKhien = () => {
                 ? "Đang ở"
                 : new Date(b.ngayRa) < now
                 ? "Quá hạn"
+                : "",
           }))
         );
         setBookingsLoading(false);
