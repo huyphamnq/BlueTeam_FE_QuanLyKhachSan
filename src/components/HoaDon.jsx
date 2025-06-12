@@ -504,7 +504,6 @@ const HoaDon = () => {
     >
       <div
         style={{
-          maxWidth: 1100,
           margin: "0 auto",
         }}
       >
