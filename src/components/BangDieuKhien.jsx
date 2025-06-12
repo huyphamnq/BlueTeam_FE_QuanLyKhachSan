@@ -389,7 +389,7 @@ const BangDieuKhien = () => {
                 ? "Đang ở"
                 : new Date(b.ngayRa) < now
                 ? "Quá hạn"
-                : "Sắp trả",
+                // : "Sắp trả",
           }))
         );
         setBookingsLoading(false);
