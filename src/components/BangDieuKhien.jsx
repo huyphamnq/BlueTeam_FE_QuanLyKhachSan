@@ -368,11 +368,7 @@ const BangDieuKhien = () => {
       .then((data) => {
         const bookings = data.items || data.data || [];
         const now = new Date();
-        const active = bookings.filter(
-          (b) =>
-            b.tinhTrangDatPhong === 2 ||
-            (b.tinhTrangDatPhong === 1 && new Date(b.ngayRa) > now)
-        );
+        const active = bookings.filter((b) => b.tinhTrangDatPhong === 2);
         setActiveBookings(
           active.map((b, idx) => ({
             id: b.idPhieuDatPhong || idx,
@@ -389,7 +385,6 @@ const BangDieuKhien = () => {
                 ? "Đang ở"
                 : new Date(b.ngayRa) < now
                 ? "Quá hạn"
-                // : "Sắp trả",
           }))
         );
         setBookingsLoading(false);
